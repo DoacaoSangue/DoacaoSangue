@@ -1,0 +1,12 @@
+Telas trab web servidor
+- Registro - Johan
+- Login - Johan 
+- Admin
+X Gerenciar Usuários - Maria
+X Visualizar as doações, gerar relatórios - Maria
+- Usuário Comum
+X Doar Sangue - Gabriel Neves
+X Receber Sangue - Gabriel Neves
+X Ver doações realizadas - Gabriel Neves
+
+
