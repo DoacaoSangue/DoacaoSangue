@@ -3,7 +3,8 @@ Telas trab web servidor
 - Login - Johan 
 - Admin
 X Gerenciar Usuários - Maria
-X Visualizar as doações, gerar relatórios - Maria
+X Gerenciar Doações - Maria
+X Gerenciar Locais de doação - Gabriel Neves
 - Usuário Comum
 X Doar Sangue - Gabriel Neves
 X Receber Sangue - Gabriel Neves
