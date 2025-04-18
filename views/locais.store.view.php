@@ -33,5 +33,7 @@
     button{
         margin-top: 1rem;
     }
-
+    h2{
+        margin-bottom: 10px;
+    }
 </style>
