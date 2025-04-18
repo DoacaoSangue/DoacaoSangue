@@ -9,5 +9,3 @@ X Gerenciar Locais de doação - Gabriel Neves
 X Doar Sangue - Gabriel Neves
 X Receber Sangue - Gabriel Neves
 X Ver doações realizadas - Gabriel Neves
-
-
