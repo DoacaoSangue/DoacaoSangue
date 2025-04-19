@@ -6,6 +6,5 @@ X Gerenciar Usuários - Maria
 X Gerenciar Doações - Maria
 X Gerenciar Locais de doação - Gabriel Neves
 - Usuário Comum
-X Doar Sangue - Gabriel Neves
-X Receber Sangue - Gabriel Neves
+X Página Inicial (doar/receber sangue) - Gabriel Neves
 X Ver doações realizadas - Gabriel Neves
