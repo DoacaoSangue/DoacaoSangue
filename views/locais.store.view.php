@@ -1,8 +1,8 @@
 <h2>Cadastrar local</h2>
-<form action="index.php?acao=locais.lista" method="POST">
+<form action="index.php?acao=locais.store" method="POST">
     <div class="container">
         <label for="nomeLocal">
-            Nome do Local   
+            Nome do Local
         </label>
         <input type="text" name="nomeLocal">
         <label for="bairro">
@@ -21,19 +21,22 @@
     <button type="submit">Salvar</button>
 </form>
 <style>
-    .container{
+    .container {
         margin-top: 5rem;
         display: flex;
         flex-direction: column;
         width: 60%;
     }
-    .container>input{
+
+    .container>input {
         margin-bottom: 1rem;
     }
-    button{
+
+    button {
         margin-top: 1rem;
     }
-    h2{
+
+    h2 {
         margin-bottom: 10px;
     }
 </style>
