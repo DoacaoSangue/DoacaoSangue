@@ -14,7 +14,7 @@ class UsuarioModel
     public static function existeEmail($email)
     {
         $conn = self::conectar();
-        $stmt = $conn->prepare("SELECT email FROM usuario WHERE email = ?");
+        $stmt = $conn->prepare("SELECT email FROM usuarios WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
@@ -27,7 +27,7 @@ class UsuarioModel
     public static function validarLogin($email, $senha)
     {
         $conn = self::conectar();
-        $stmt = $conn->prepare("SELECT email, senha FROM usuario WHERE email = ?");
+        $stmt = $conn->prepare("SELECT email, senha FROM usuarios WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
@@ -48,7 +48,7 @@ class UsuarioModel
         return false;
     }
 
-    public static function cadastrarUsuario($nome, $email, $senha, $telefone, $endereco, $tipo)
+    public static function cadastrarUsuario($nome, $email, $senha, $telefone, $endereco, $tipo, $alergias)
     {
 
         if (self::existeEmail($email)) {
@@ -63,8 +63,9 @@ class UsuarioModel
 
         $conn = self::conectar();
 
-        $stmt = $conn->prepare("INSERT INTO usuario (nome, email, senha, telefone, endereco, tipo_sanguineo) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('ssssss', $nome, $email, $senhaHash, $telefone, $endereco, $tipo);
+        $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha, telefone, endereco, id_tipo_sanguineo, alergias) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssis", $nome, $email, $senhaHash, $telefone, $endereco, $tipo, $alergias);
+
         $resultado = $stmt->execute();
 
         $stmt->close();

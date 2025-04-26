@@ -70,17 +70,34 @@ if (session_status() === PHP_SESSION_NONE) {
         <label for="complemento">Complemento:</label>
         <input type="text" name="complemento" id="complemento">
 
-        <label for="tipo_sanguineo">Tipo Sanguíneo:</label>
-        <select name="tipo_sanguineo" id="tipo_sanguineo" required>
-            <option value="">Selecione...</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
+        <label for="id_tipo_sanguineo">Tipo Sanguíneo:</label>
+        <?php
+        // Conexão com o banco de dados
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "doacao_sangue";
+
+        $conn = new mysqli($servername, $username, $password, $dbname);
+
+        // Verificar conexão
+        if ($conn->connect_error) {
+            die("Conexão falhou: " . $conn->connect_error);
+        }
+
+        // Buscar os tipos sanguíneos
+        $sql = "SELECT id_tipo, tipo FROM tipos_sanguineos"; // ajuste os nomes conforme seu banco
+        $result = $conn->query($sql);
+        ?>
+        <select name="id_tipo_sanguineo" id="id_tipo_sanguineo" required>
+        <option value="">Selecione...</option>
+        <?php
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo '<option value="' . htmlspecialchars($row["id_tipo"]) . '">' . htmlspecialchars($row["tipo"]) . '</option>';
+            }
+        }
+        ?>
         </select>
 
         <label for="alergias">Alergias:</label>

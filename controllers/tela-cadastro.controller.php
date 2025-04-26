@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = $_POST['pass'] ?? '';
     $confirmarSenha = $_POST['confirmar_senha'] ?? '';
     $telefone = $_POST['telefone'] ?? '';
-    $tipo = $_POST['tipo_sanguineo'] ?? '';
+    $tipo = $_POST['id_tipo_sanguineo'] ?? '';
     $alergias = $_POST['alergias'] ?? '';
 
     $endereco = "Rua: {$_POST['rua']}, Número: {$_POST['numero']}, Bairro: {$_POST['bairro']}, Cidade: {$_POST['cidade']}, Estado: {$_POST['estado']}";

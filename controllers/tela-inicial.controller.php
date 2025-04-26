@@ -49,7 +49,7 @@ class TelaInicialController
             }
 
             $conn = UsuarioModel::conectar();
-            $stmt = $conn->prepare("SELECT tipo_usuario FROM usuario WHERE email = ?");
+            $stmt = $conn->prepare("SELECT tipo_usuario FROM usuarios WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $stmt->bind_result($tipoUsuario);
