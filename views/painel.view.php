@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+// Se o usuário não estiver logado, volta para o login
+if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 1) {
+    header('Location: ../index.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -56,7 +65,7 @@
             <li><a href="index.php?acao=">Minhas Doações</a></li>
         </ul>
         <ul class="Sair">
-            <li><a href="">Sair</a></li>
+            <li><a href="../index.php?acao=sair">Sair</a></li>
         </ul>
     </header>
 </body>

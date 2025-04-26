@@ -10,6 +10,12 @@ class TelaInicialController
             session_start();
         }
 
+        if (isset($_GET['acao']) && $_GET['acao'] === 'sair') {
+            session_destroy();
+            header('Location: index.php');
+            exit();
+        }
+
         $page = $_GET['page'] ?? null;
         if ($page === 'cadastro') {
             require_once(__DIR__ . '/../views/tela-cadastro.view.php');

@@ -24,6 +24,8 @@ CREATE TABLE `usuarios` (
   `alergias` VARCHAR(255) DEFAULT NULL,
   `tipo_usuario` TINYINT(4) DEFAULT 0,
   `criado_em` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `doar` BOOLEAN DEFAULT false,
+  `receber` BOOLEAN DEFAULT false,
   CONSTRAINT `fk_usuario_tipo_sanguineo` FOREIGN KEY (`id_tipo_sanguineo`) REFERENCES `tipos_sanguineos`(`id_tipo`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -198,24 +200,3 @@ SELECT id_tipo_doador, id_tipo_recebedor FROM (
         (SELECT id_tipo FROM tipos_sanguineos WHERE tipo = 'O+') AS id_tipo_doador,
         (SELECT id_tipo FROM tipos_sanguineos WHERE tipo = 'O-') AS id_tipo_recebedor
 ) AS sub;
-
-
-INSERT INTO usuarios (
-  email,
-  nome,
-  senha,
-  telefone,
-  endereco,
-  id_tipo_sanguineo,
-  alergias,
-  tipo_usuario
-) VALUES (
-  'joao@gmail.com',
-  'João da Silva',
-  'Senha123@', -- normalmente aqui vai a senha já *criptografada* (hash)
-  '(11) 91234-5678',
-  'Rua das Flores, 123 - São Paulo, SP',
-  NULL,
-  NULL,
-  1
-);
