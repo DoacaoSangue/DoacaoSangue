@@ -15,9 +15,9 @@ CREATE TABLE `restricoes` (
 
 CREATE TABLE `locais` (
   `id_local` SERIAL PRIMARY KEY,
-  `nome` VARCHAR(100) NOT NULL
-  `bairro` VARCHAR(100) NOT NULL
-  `rua` VARCHAR(150) NOT NULL
+  `nome` VARCHAR(100) NOT NULL,
+  `bairro` VARCHAR(100) NOT NULL,
+  `rua` VARCHAR(150) NOT NULL,
   `numero` INTEGER NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 

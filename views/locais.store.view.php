@@ -1,22 +1,22 @@
 <h2>Cadastrar local</h2>
-<form action="index.php?acao=locais.store" method="POST">
+<form action="http://localhost/DoacaoSangue/controllers/locais.store.controller.php" method="POST">
     <div class="container">
-        <label for="nomeLocal">
+        <label for="nome">
             Nome do Local
         </label>
-        <input type="text" name="nomeLocal">
+        <input type="text" name="nome" id="nome">
         <label for="bairro">
             Bairro
         </label>
-        <input type="text" name="bairro">
+        <input type="text" name="bairro" id="bairro">
         <label for="rua">
             Rua
         </label>
-        <input type="text" name="rua">
+        <input type="text" name="rua" id="rua">
         <label for="numero">
             Número
         </label>
-        <input type="number" name="numero" step="1" min="1">
+        <input type="number" name="numero" step="1" min="1" id="numero">
     </div>
     <button type="submit">Salvar</button>
 </form>

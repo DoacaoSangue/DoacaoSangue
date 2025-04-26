@@ -1,31 +1,22 @@
 <?php
-session_start();
 
-if (!isset($_SESSION["locais"])) {
-    $_SESSION["locais"] = [];
-}
+require_once('../models/locais.model.php');
 
-if (!isset($_SESSION["ultimo_id_local"])) {
-    $_SESSION["ultimo_id_local"] = 0;
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = $_POST['nome'] ?? '';
+    $bairro = $_POST['bairro'] ?? '';
+    $rua = $_POST['rua'] ?? '';
+    $numero = $_POST['numero'] ?? '';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $resultado = UsuarioModel::cadastrarUsuario($nome, $email, $senha, $telefone, $endereco, $tipo, $alergias);
 
-    if (empty($_POST["nomeLocal"]) || empty($_POST["bairro"]) || empty($_POST["rua"]) || empty($_POST["numero"])) {
-        header("Location: index.php?acao=erro-campos");
+    if ($resultado === true) {
+        session_start();
+        $_SESSION['cadastro_sucesso'] = true;
+        echo "<script>alert('Cadastro efetuado com sucesso!'); window.history.back();</script>";
+        exit;
+    } else {
+        echo "<script>alert('Erro ao cadastrar: $resultado'); window.history.back();</script>";
         exit;
     }
-
-    $_SESSION["ultimo_id_local"]++;
-
-    $_SESSION["locais"][] = [
-        "id" => $_SESSION["ultimo_id_local"],
-        "nomeLocal" => $_POST["nomeLocal"],
-        "bairro" => $_POST["bairro"],
-        "rua" => $_POST["rua"],
-        "numero" => $_POST["numero"],
-    ];
-
-    header("Location: index.php?acao=locais.lista");
-    exit;
 }
