@@ -24,8 +24,33 @@ class UsuarioModel
         return $existe;
     }
 
-    public static function cadastrarUsuario($nome, $email, $senha, $telefone, $endereco, $tipo, $alergias)
+    public static function validarLogin($email, $senha)
     {
+        $conn = self::conectar();
+        $stmt = $conn->prepare("SELECT email, senha FROM usuario WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($usuario_email, $senhaHash);
+            $stmt->fetch();
+
+            if (password_verify($senha, $senhaHash)) {
+                $stmt->close();
+                $conn->close();
+                return $usuario_email;
+            }
+        }
+
+        $stmt->close();
+        $conn->close();
+        return false;
+    }
+
+    public static function cadastrarUsuario($nome, $email, $senha, $telefone, $endereco, $tipo)
+    {
+
         if (self::existeEmail($email)) {
             return 'Erro: O email já está em uso.';
         }
@@ -35,10 +60,11 @@ class UsuarioModel
         }
 
         $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
         $conn = self::conectar();
 
-        $stmt = $conn->prepare("INSERT INTO usuario (nome, email, senha, telefone, endereco, tipo_sanguineo, alergias) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('sssssss', $nome, $email, $senhaHash, $telefone, $endereco, $tipo, $alergias);
+        $stmt = $conn->prepare("INSERT INTO usuario (nome, email, senha, telefone, endereco, tipo_sanguineo) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('ssssss', $nome, $email, $senhaHash, $telefone, $endereco, $tipo);
         $resultado = $stmt->execute();
 
         $stmt->close();
