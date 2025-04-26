@@ -13,6 +13,14 @@ CREATE TABLE `restricoes` (
   CONSTRAINT `fk_recebedor_tipo` FOREIGN KEY (`id_tipo_recebedor`) REFERENCES `tipos_sanguineos`(`id_tipo`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+CREATE TABLE `locais` (
+  `id_local` SERIAL PRIMARY KEY,
+  `nome` VARCHAR(100) NOT NULL
+  `bairro` VARCHAR(100) NOT NULL
+  `rua` VARCHAR(150) NOT NULL
+  `numero` INTEGER NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 CREATE TABLE `usuarios` (
   `id_usuario` SERIAL PRIMARY KEY,
   `email` VARCHAR(100) NOT NULL UNIQUE,
@@ -33,9 +41,11 @@ CREATE TABLE `doacoes` (
   `id_doacao` SERIAL PRIMARY KEY,
   `id_doador` BIGINT UNSIGNED NOT NULL,
   `id_recebedor` BIGINT UNSIGNED NOT NULL,
+  `id_local` BIGINT UNSIGNED NOT NULL,
   `data` DATE NOT NULL,
   FOREIGN KEY (`id_doador`) REFERENCES `usuarios`(`id_usuario`) ON DELETE CASCADE,
-  CONSTRAINT `fk_doacao_recebedor` FOREIGN KEY (`id_recebedor`) REFERENCES `usuarios`(`id_usuario`) ON DELETE CASCADE
+  CONSTRAINT `fk_doacao_recebedor` FOREIGN KEY (`id_recebedor`) REFERENCES `usuarios`(`id_usuario`) ON DELETE CASCADE,
+  CONSTRAINT `fk_doacao_local` FOREIGN KEY (`id_local`) REFERENCES `locais`(`id_local`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 INSERT INTO tipos_sanguineos (tipo) VALUES

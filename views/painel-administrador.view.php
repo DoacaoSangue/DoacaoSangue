@@ -6,6 +6,9 @@ if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 1) {
     header('Location: ../index.php');
     exit;
 }
+
+$page = $_GET['page'] ?? 'locais';
+$crud = $_GET['crud'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -55,15 +58,68 @@ if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 1) {
         .sair {
             justify-content: right;
         }
+
+        main{
+            margin-top: 10rem;
+        }
     </style>
 </head>
-<header>
-    <ul>
-        <li><a href="index.php?acao=locais.lista">Locais</a></li>
-        <li><a href="index.php?acao=usuarios.lista">Usuários</a></li>
-        <li><a href="index.php?acao=doacoes.lista">Doações</a></li>
-    </ul>
-    <ul class="Sair">
-        <li><a href="../index.php?acao=sair">Sair</a></li>
-    </ul>
-</header>
+<body>
+    <header>
+        <ul>
+            <li><a href="?page=locais">Locais</a></li>
+            <li><a href="?page=usuarios">Usuários</a></li>
+            <li><a href="?page=doacoes">Doações</a></li>
+        </ul>
+        <ul class="sair">
+            <li><a href="../index.php?acao=sair">Sair</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <?php
+        // Aqui ele inclui dinamicamente o conteúdo!
+        switch ($page) {
+            case 'locais':
+                switch($crud){
+                    case 'c':
+                        require("locais.store.view.php");
+                        break;
+                    case 'u':
+                        require("locais.update.view.php");
+                        break;
+                    default:
+                        require('locais.lista.view.php');
+                }
+                break;
+            case 'usuarios':
+                switch($crud){
+                    case 'c':
+                        require("usuarios.store.view.php");
+                        break;
+                    case 'u':
+                        require("usuarios.update.view.php");
+                        break;
+                    default:
+                        require('usuarios.lista.view.php');
+                }
+                break;
+            case 'doacoes':
+                switch($crud){
+                    case 'c':
+                        require("doacoes.store.view.php");
+                        break;
+                    case 'u':
+                        require("doacoes.update.view.php");
+                        break;
+                    default:
+                        require('doacoes.lista.view.php');
+                }
+                break;
+            default:
+                echo "<p>Página não encontrada.</p>";
+        }
+        ?>
+    </main>
+</body>
+</html>

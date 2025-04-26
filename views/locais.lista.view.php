@@ -6,8 +6,9 @@
     <input type="submit" value="Buscar">
 </form>
 
-<form action="index.php" method="GET">
-    <input type="hidden" name="acao" value="locais.store.view">
+<form action="" method="GET">
+    <input type="hidden" name="page" value="locais">
+    <input type="hidden" name="crud" value="c">
     <input type="submit" value="Adicionar Local">
 </form>
 

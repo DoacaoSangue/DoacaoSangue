@@ -1,11 +1,14 @@
 <?php
 session_start();
 
-// Se o usuário não estiver logado, volta para o login
+// Proteção de login
 if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 1) {
     header('Location: ../index.php');
     exit;
 }
+
+// Verifica qual página o usuário quer
+$page = $_GET['page'] ?? 'home'; // Se não passar nada, vai pra 'home' por padrão
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,8 +18,8 @@ if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 1) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-    <title>Formulário</title>
-    
+    <title>Painel do Administrador</title>
+
     <style>
         header {
             background-color: #2c3e50 !important;
@@ -56,17 +59,40 @@ if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 1) {
         .sair {
             justify-content: right;
         }
+
+        main {
+            margin-top: 100px;
+            padding: 2rem;
+        }
     </style>
 </head>
+
 <body>
     <header>
         <ul>
-            <li><a href="index.php?acao=">Página Inicial</a></li>
-            <li><a href="index.php?acao=">Minhas Doações</a></li>
+            <li><a href="?page=home">Página Inicial</a></li>
+            <li><a href="?page=doacoes">Minhas Doações</a></li>
         </ul>
-        <ul class="Sair">
+        <ul class="sair">
             <li><a href="../index.php?acao=sair">Sair</a></li>
         </ul>
     </header>
+
+    <main>
+        <?php
+        // Aqui ele inclui dinamicamente o conteúdo!
+        switch ($page) {
+            case 'home':
+                require('partials/admin-home.view.php');
+                break;
+            case 'doacoes':
+                require('partials/admin-doacoes.view.php');
+                break;
+            default:
+                echo "<p>Página não encontrada.</p>";
+        }
+        ?>
+    </main>
 </body>
+
 </html>
