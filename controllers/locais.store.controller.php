@@ -1,6 +1,6 @@
 <?php
 
-require_once('../models/locais.model.php');
+require_once('../models/local.model.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'] ?? '';
@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rua = $_POST['rua'] ?? '';
     $numero = $_POST['numero'] ?? '';
 
-    $resultado = UsuarioModel::cadastrarUsuario($nome, $email, $senha, $telefone, $endereco, $tipo, $alergias);
+    $resultado = LocalModel::cadastrarLocal($nome, $bairro, $rua, $numero);
 
     if ($resultado === true) {
         session_start();

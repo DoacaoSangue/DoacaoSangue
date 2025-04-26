@@ -88,8 +88,11 @@ $crud = $_GET['crud'] ?? '';
                     case 'u':
                         require("locais.update.view.php");
                         break;
+                    case 'r':
+                        require("locais.lista.view.php");
+                        break;
                     default:
-                        require('locais.lista.view.php');
+                        require_once('../controllers/locais.lista.controller.php');
                 }
                 break;
             case 'usuarios':

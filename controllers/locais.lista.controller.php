@@ -1,25 +1,28 @@
 <?php
+
+require_once('../models/local.model.php');
+
 session_start();
 
-if (!isset($_SESSION["locais"])) {
-    $_SESSION["locais"] = [];
+// Verifica se foi passada uma busca
+$buscar = $_GET['buscar'] ?? '';
+
+// Se houver um valor na busca, filtra os locais
+if (!empty($buscar)) {
+    // Filtra os locais com base no nome
+    $locais = LocalModel::buscarLocalPorNome($buscar); // Implementar um método específico de busca por nome no seu model
+} else {
+    // Caso contrário, busca todos os locais
+    $locais = LocalModel::buscarTodosLocais();
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (
-        isset($_POST["nomeLocal"], $_POST["bairro"], $_POST["rua"], $_POST["numero"])
-        && $_POST["nomeLocal"] !== "" && $_POST["bairro"] !== "" && $_POST["rua"] !== "" && $_POST["numero"] !== ""
-    ) {
-        $_SESSION["locais"][] = [
-            "nomeLocal" => $_POST["nomeLocal"],
-            "bairro" => $_POST["bairro"],
-            "rua" => $_POST["rua"],
-            "numero" => $_POST["numero"],
-        ];
-    } else {
-        header("Location: index.php?acao=erro-campos");
-        exit;
-    }
+// Armazena os locais na variável de sessão
+if ($locais !== false) {
+    $_SESSION['locais'] = $locais;
+} else {
+    $_SESSION['locais'] = [];  // Se não encontrar locais, armazena um array vazio
 }
 
-require("views/locais.lista.view.php");
+// Redireciona de volta para a view de locais
+header("Location: ../views/painel-administrador.view.php?page=locais&crud=r");
+exit;

@@ -16,7 +16,7 @@ class LocalModel
         $conn = self::conectar();
 
         $stmt = $conn->prepare("INSERT INTO locais (nome, bairro, rua, numero) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssssis", $nome, $bairro, $rua, $numero);
+        $stmt->bind_param("sssi", $nome, $bairro, $rua, $numero);
 
         $resultado = $stmt->execute();
 
@@ -28,35 +28,44 @@ class LocalModel
 
     public static function buscarTodosLocais(){
         $conn = self::conectar();
-
         $sql = "SELECT * FROM locais";
         $result = $conn->query($sql);
 
-        $locais = [];
         if ($result->num_rows > 0) {
+            $locais = [];
             while ($row = $result->fetch_assoc()) {
                 $locais[] = $row;
             }
-        }
+            $conn->close();
 
-        $conn->close();
-        return $locais;
+            var_dump($locais);  // Isso vai mostrar os dados retornados pelo banco
+            return $locais;
+        } else {
+            $conn->close();
+            return false; // Nenhum local encontrado
+        }
     }
+    
 
     public static function buscarLocalPorNome($nome){
         $conn = self::conectar();
-
-        $stmt = $conn->prepare("SELECT * FROM locais WHERE nome = ?");
-        $stmt->bind_param("s", $nome);
+    
+        // Usando LIKE para busca parcial
+        $stmt = $conn->prepare("SELECT * FROM locais WHERE nome LIKE ?");
+        $nomeBusca = "%" . $nome . "%"; // O % permite busca parcial antes e depois do nome
+        $stmt->bind_param("s", $nomeBusca);
         $stmt->execute();
         $resultado = $stmt->get_result();
-
-        $local = $resultado->fetch_assoc();
-
+    
+        $locais = [];
+        while ($row = $resultado->fetch_assoc()) {
+            $locais[] = $row;
+        }
+    
         $stmt->close();
         $conn->close();
-
-        return $local;
+    
+        return $locais;
     }
 
     public static function atualizarLocal($id, $nome, $bairro, $rua, $numero){

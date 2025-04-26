@@ -2,7 +2,7 @@
 session_start();
 
 // Proteção de login
-if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 1) {
+if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 0) {
     header('Location: ../index.php');
     exit;
 }
