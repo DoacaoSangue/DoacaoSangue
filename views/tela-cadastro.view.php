@@ -34,7 +34,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <div class="form-card">
     <h2>Cadastro de Novo Usuário</h2>
 
-    <form action="http://localhost/DoacaoSangueFinal/controllers/tela-cadastro.controller.php" method="POST">
+    <form action="http://localhost/DoacaoSangue/controllers/tela-cadastro.controller.php" method="POST">
 
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" required>
