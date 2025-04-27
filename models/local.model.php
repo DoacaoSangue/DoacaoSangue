@@ -46,6 +46,21 @@ class LocalModel
         }
     }
     
+    public static function buscarLocalPorId($id){
+        $conn = self::conectar();
+
+        $stmt = $conn->prepare("SELECT * FROM locais WHERE id_local = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        $local = $resultado->fetch_assoc();
+
+        $stmt->close();
+        $conn->close();
+
+        return $local;
+    }
 
     public static function buscarLocalPorNome($nome){
         $conn = self::conectar();
