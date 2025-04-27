@@ -63,11 +63,12 @@ $page = $_GET['page'] ?? 'home'; // Se não passar nada, vai pra 'home' por padr
         main {
             margin-top: 100px;
             padding: 2rem;
+            width: 100%!important;
         }
     </style>
 </head>
 
-<body>
+<body style="padding:0;">
     <header>
         <ul>
             <li><a href="?page=carregar-home">Página Inicial</a></li>

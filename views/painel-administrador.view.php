@@ -61,6 +61,15 @@ $crud = $_GET['crud'] ?? '';
 
         main{
             margin-top: 10rem;
+            width: 70%!important;
+        }
+        body{
+            width: 100%;
+            grid-template-columns: 0;
+            padding-left: 15%;
+        }
+        table{
+            width: 100%;
         }
     </style>
 </head>

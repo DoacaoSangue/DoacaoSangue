@@ -1,5 +1,5 @@
 <h2>Cadastrar local</h2>
-<form action="http://localhost/DoacaoSangue/controllers/locais.store.controller.php" method="POST">
+<form action="../controllers/locais.store.controller.php" method="POST">
     <div class="container">
         <label for="nome">
             Nome do Local

@@ -26,7 +26,7 @@ if (!empty($_SESSION["locais"])):
 
 <!-- Exibindo os locais filtrados -->
 <?php if (!empty($locaisFiltrados)): ?>
-    <table>
+    <table width="70%">
         <thead>
             <tr>
                 <th>Nome do Local</th>

@@ -73,4 +73,75 @@ class UsuarioModel
 
         return $resultado ? true : 'Erro ao cadastrar o usuário. Tente novamente.';
     }
+
+    public static function buscarStatusDoacao($idUsuario){
+        $conn = self::conectar();
+
+        $stmt = $conn->prepare("SELECT doar, receber FROM usuarios WHERE id_usuario = ?");
+        if (!$stmt) {
+            die("Erro na preparação da consulta: " . $conn->error);
+        }
+
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
+        $stmt->bind_result($doar, $receber);
+
+        $resultado = null;
+        if ($stmt->fetch()) {
+            $resultado = [
+                'doar' => $doar,
+                'receber' => $receber
+            ];
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        return $resultado;
+    }
+
+    public static function atualizarStatusDoacao($idUsuario, $campo)
+    {
+        $conn = self::conectar();
+
+        // Verifica se o campo é válido (para evitar SQL Injection)
+        if (!in_array($campo, ['doar', 'receber'])) {
+            die("Campo inválido para atualização.");
+        }
+
+        // Monta o SQL dinamicamente de forma segura
+        $sql = "UPDATE usuarios SET $campo = 1 WHERE id_usuario = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            die("Erro na preparação da atualização: " . $conn->error);
+        }
+
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
+        $stmt->close();
+
+        // Agora busca o novo status do usuário
+        $stmt = $conn->prepare("SELECT doar, receber FROM usuarios WHERE id_usuario = ?");
+        if (!$stmt) {
+            die("Erro na preparação da consulta: " . $conn->error);
+        }
+
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
+        $stmt->bind_result($doar, $receber);
+
+        $resultado = null;
+        if ($stmt->fetch()) {
+            $resultado = [
+                'doar' => $doar,
+                'receber' => $receber
+            ];
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        return $resultado;
+    }
 }
+

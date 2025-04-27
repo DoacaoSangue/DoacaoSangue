@@ -11,22 +11,28 @@ class DoacaoModel
         return $conn;
     }
 
-    public static function temDoacaoFutura($id_usuario)
-    {
+    public static function buscarDoacoesPorUsuario($idUsuario) {
         $conn = self::conectar();
-
-        $sql = "SELECT 1 FROM doacoes WHERE (id_doador = ? OR id_recebedor = ?) AND data > CURDATE() LIMIT 1";
-        
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ii", $id_usuario, $id_usuario); 
+    
+        $stmt = $conn->prepare("SELECT * FROM doacoes WHERE id_doador = ? OR id_recebedor = ?");
+        if (!$stmt) {
+            die("Erro na preparação da consulta: " . $conn->error);
+        }
+    
+        $stmt->bind_param("ii", $idUsuario, $idUsuario);
         $stmt->execute();
-
+    
         $resultado = $stmt->get_result();
-        $tem_doacao_futura = $resultado->num_rows > 0; 
-        
+        $doacoes = [];
+    
+        while ($row = $resultado->fetch_assoc()) {
+            $doacoes[] = $row;
+        }
+    
         $stmt->close();
         $conn->close();
-
-        return $tem_doacao_futura;
+    
+        return $doacoes;
     }
+    
 }
