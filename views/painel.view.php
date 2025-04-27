@@ -18,7 +18,7 @@ $page = $_GET['page'] ?? 'home'; // Se não passar nada, vai pra 'home' por padr
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-    <title>Painel do Administrador</title>
+    <title>Painel</title>
 
     <style>
         header {
@@ -70,7 +70,7 @@ $page = $_GET['page'] ?? 'home'; // Se não passar nada, vai pra 'home' por padr
 <body>
     <header>
         <ul>
-            <li><a href="?page=home">Página Inicial</a></li>
+            <li><a href="?page=carregar-home">Página Inicial</a></li>
             <li><a href="?page=doacoes">Minhas Doações</a></li>
         </ul>
         <ul class="sair">
@@ -82,11 +82,14 @@ $page = $_GET['page'] ?? 'home'; // Se não passar nada, vai pra 'home' por padr
         <?php
         // Aqui ele inclui dinamicamente o conteúdo!
         switch ($page) {
+            case 'carregar-home':
+                require('../controllers/carregar-doar.controller.php');
+                break;
             case 'home':
-                require('partials/admin-home.view.php');
+                require('doar.view.php');
                 break;
             case 'doacoes':
-                require('partials/admin-doacoes.view.php');
+                require('minhas-doacoes.view.php');
                 break;
             default:
                 echo "<p>Página não encontrada.</p>";

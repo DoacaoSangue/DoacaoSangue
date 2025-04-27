@@ -55,16 +55,18 @@ class TelaInicialController
             }
 
             $conn = UsuarioModel::conectar();
-            $stmt = $conn->prepare("SELECT tipo_usuario FROM usuarios WHERE email = ?");
+            $stmt = $conn->prepare("SELECT id_usuario, tipo_usuario FROM usuarios WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
-            $stmt->bind_result($tipoUsuario);
+
+            $stmt->bind_result($idUsuario, $tipoUsuario);
             $stmt->fetch();
             $stmt->close();
             $conn->close();
 
-            $_SESSION['usuario_email'] = $usuarioEmail;
+            $_SESSION['usuario_email'] = $email;
             $_SESSION['tipo_usuario'] = $tipoUsuario;
+            $_SESSION['id_usuario'] = $idUsuario;
 
             if ($tipoUsuario == 1) {
                 header('Location: views/painel-administrador.view.php');
