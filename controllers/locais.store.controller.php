@@ -13,10 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($resultado === true) {
         session_start();
         $_SESSION['cadastro_sucesso'] = true;
-        echo "<script>alert('Cadastro efetuado com sucesso!'); window.history.back();</script>";
-        exit;
+        echo "<script>alert('Cadastro de local efetuado com sucesso!');
+        window.location.href = '../views/painel-administrador.view.php?page=locais&crud=';</script>";
     } else {
-        echo "<script>alert('Erro ao cadastrar: $resultado'); window.history.back();</script>";
-        exit;
+        echo "<script>alert('Erro ao cadastrar local: $resultado'); 
+        window.location.href = '../views/painel-administrador.view.php?page=locais&crud=';</script>";
     }
 }

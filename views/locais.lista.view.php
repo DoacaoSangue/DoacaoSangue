@@ -13,24 +13,19 @@
 
 <?php
 if (!empty($_SESSION["locais"])): 
-    // Captura o valor de busca e remove espaços em branco
     $buscar = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 
-    // Se o valor de 'buscar' não for vazio, aplica o filtro
     if ($buscar) {
-        // Filtra os locais com base no nome, utilizando stripos para busca sem diferenciar maiúsculas e minúsculas
         $locaisFiltrados = array_filter($_SESSION["locais"], function ($local) use ($buscar) {
             return stripos($local["nome"], $buscar) !== false;
         });
     } else {
-        // Caso não haja busca, exibe todos os locais
         $locaisFiltrados = $_SESSION["locais"];
     }
 ?>
 
 <!-- Exibindo os locais filtrados -->
 <?php if (!empty($locaisFiltrados)): ?>
-    <h1><?php echo "Valor de busca: " . htmlspecialchars($buscar); ?></h1>
     <table>
         <thead>
             <tr>
@@ -49,14 +44,16 @@ if (!empty($_SESSION["locais"])):
                     <td><?= htmlspecialchars($local["rua"]) ?></td>
                     <td><?= htmlspecialchars($local["numero"]) ?></td>
                     <td>
-                        <form action="index.php" method="GET">
-                            <input type="hidden" name="acao" value="locais.editar">
-                            <input type="hidden" name="id" value="<?= $index ?>">
+                        <form action="" method="GET">
+                            <input type="hidden" name="page" value="locais">
+                            <input type="hidden" name="crud" value="u">
+                            <input type="hidden" name="id" value="<?= $local['id_local'] ?>"> 
                             <input type="submit" value="Alterar">
                         </form>
-                        <form action="index.php" method="POST">
-                            <input type="hidden" name="acao" value="locais.excluir">
-                            <input type="hidden" name="id" value="<?= $index ?>">
+                        <form action="" method="GET">
+                            <input type="hidden" name="page" value="locais">
+                            <input type="hidden" name="crud" value="d">
+                            <input type="hidden" name="id" value="<?= $local['id_local'] ?>"> 
                             <input type="submit" value="Excluir">
                         </form>
                     </td>

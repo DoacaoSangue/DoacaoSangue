@@ -71,7 +71,7 @@ class LocalModel
     public static function atualizarLocal($id, $nome, $bairro, $rua, $numero){
         $conn = self::conectar();
 
-        $stmt = $conn->prepare("UPDATE locais SET nome = ?, bairro = ?, rua = ?, numero = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE locais SET nome = ?, bairro = ?, rua = ?, numero = ? WHERE id_local = ?");
         $stmt->bind_param("sssii", $nome, $bairro, $rua, $numero, $id);
 
         $resultado = $stmt->execute();
@@ -85,7 +85,7 @@ class LocalModel
     public static function excluirLocal($id){
         $conn = self::conectar();
 
-        $stmt = $conn->prepare("DELETE FROM locais WHERE id = ?");
+        $stmt = $conn->prepare("DELETE FROM locais WHERE id_local = ?");
         $stmt->bind_param("i", $id);
 
         $resultado = $stmt->execute();

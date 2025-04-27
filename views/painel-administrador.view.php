@@ -78,7 +78,6 @@ $crud = $_GET['crud'] ?? '';
 
     <main>
         <?php
-        // Aqui ele inclui dinamicamente o conteúdo!
         switch ($page) {
             case 'locais':
                 switch($crud){
@@ -91,6 +90,8 @@ $crud = $_GET['crud'] ?? '';
                     case 'r':
                         require("locais.lista.view.php");
                         break;
+                    case 'd':
+                        require_once('../controllers/locais.delete.controller.php');
                     default:
                         require_once('../controllers/locais.lista.controller.php');
                 }
