@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 0) {
 }
 
 // Verifica qual página o usuário quer
-$page = $_GET['page'] ?? 'home'; // Se não passar nada, vai pra 'home' por padrão
+$page = $_GET['page'] ?? 'carregar-home'; // Se não passar nada, vai pra 'home' por padrão
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,7 +72,7 @@ $page = $_GET['page'] ?? 'home'; // Se não passar nada, vai pra 'home' por padr
     <header>
         <ul>
             <li><a href="?page=carregar-home">Página Inicial</a></li>
-            <li><a href="?page=doacoes">Minhas Doações</a></li>
+            <li><a href="?page=carregar-doacoes">Minhas Doações</a></li>
         </ul>
         <ul class="sair">
             <li><a href="../index.php?acao=sair">Sair</a></li>
@@ -89,6 +89,8 @@ $page = $_GET['page'] ?? 'home'; // Se não passar nada, vai pra 'home' por padr
             case 'home':
                 require('doar.view.php');
                 break;
+            case 'carregar-doacoes':
+                require('../controllers/minhas-doacoes.controller.php');
             case 'doacoes':
                 require('minhas-doacoes.view.php');
                 break;
