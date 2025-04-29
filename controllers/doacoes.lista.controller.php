@@ -2,12 +2,10 @@
 
 require_once('../models/doacao.model.php');
 
-session_start();
+$buscar_doacoes = $_GET['buscar_doacoes'] ?? '';
 
-$buscar = $_GET['buscar'] ?? '';
-
-if (!empty($buscar)) {
-    $doacoes = DoacaoModel::buscarDoacaoPorDoador($buscar);
+if (!empty($buscar_doacoes)) {
+    $doacoes = DoacaoModel::buscarDoacaoPorDoador($buscar_doacoes);
 } else {
     $doacoes = DoacaoModel::buscarTodasDoacoes();
 }

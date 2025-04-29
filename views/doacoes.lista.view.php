@@ -1,7 +1,9 @@
 <h3>Doações</h3>
 
-<form action="painel-administrador.view.php?page=doacoes&crud=r" method="GET">
-    <input type="text" name="buscar" >
+<form action="" method="GET">
+    <input type="hidden" name="page" value="doacoes">
+    <input type="hidden" name="crud" value="">
+    <input type="text" name="buscar_doacoes" >
     <input type="submit" value="Buscar">
 </form>
 
@@ -13,11 +15,11 @@
 
 <?php
 if (!empty($_SESSION["doacoes"])): 
-    $buscar = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
+    $buscar_doacoes = isset($_GET['buscar_doacoes']) ? trim($_GET['buscar_doacoes']) : '';
 
-    if ($buscar) {
-        $doacoesFiltrados = array_filter($_SESSION["doacoes"], function ($doacoes) use ($buscar) {
-            return stripos($doacoes["nome"], $buscar) !== false;
+    if ($buscar_doacoes) {
+        $doacoesFiltrados = array_filter($_SESSION["doacoes"], function ($doacoes) use ($buscar_doacoes) {
+            return stripos($doacoes["nome_doador"], $buscar_doacoes) !== false;
         });
     } else {
         $doacoesFiltrados = $_SESSION["doacoes"];
@@ -67,6 +69,4 @@ if (!empty($_SESSION["doacoes"])):
 <?php else: ?>
     <p>Nenhuma doação encontrada para a busca.</p>
 <?php endif; ?>
-<?php else: ?>
-    <p>Nenhuma doação cadastrada ainda.</p>
 <?php endif; ?>
