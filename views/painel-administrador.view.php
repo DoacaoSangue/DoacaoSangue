@@ -83,7 +83,6 @@ $crud = $_GET['crud'] ?? '';
             <li><a href="../index.php?acao=sair">Sair</a></li>
         </ul>
     </header>
-
     <main>
         <?php
         switch ($page) {
