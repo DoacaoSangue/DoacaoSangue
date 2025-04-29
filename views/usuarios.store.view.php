@@ -1,73 +1,68 @@
-<style>
-    body {
-        background-color: #222;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Usuário</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 400px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, select {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #004aad;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003080;
+        }
+    </style>
+</head>
+<body>
 
-    .navbar {
-        background-color: #111;
-        padding: 15px;
-        display: flex;
-        gap: 20px;
-    }
+<div class="container">
+    <h1>Cadastrar Usuário</h1>
 
-    .navbar a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: bold;
-    }
+    <form method="POST" action="painel-administrador.view.php?page=usuarios&crud=armazenar">
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="senha" placeholder="Senha" required>
+        <select name="tipo" required>
+            <option value="">Selecione o Tipo</option>
+            <option value="admin">Administrador</option>
+            <option value="comum">Comum</option>
+        </select>
+        <button type="submit">Salvar</button>
+    </form>
+</div>
 
-    .navbar a:hover {
-        color: #f1c40f;
-    }
-
-    table {
-        width: 90%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        background-color: #333;
-    }
-
-    th, td {
-        border: 1px solid #444;
-        padding: 12px;
-        text-align: center;
-    }
-
-    th {
-        background-color: #111;
-        color: #f1c40f;
-    }
-
-    tr:nth-child(even) {
-        background-color: #2c2c2c;
-    }
-
-    .btn {
-        padding: 8px 15px;
-        margin: 2px;
-        text-decoration: none;
-        background-color: #f1c40f;
-        color: #000;
-        border: none;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .btn:hover {
-        background-color: #d4ac0d;
-    }
-
-    .btn-danger {
-        background-color: #e74c3c;
-        color: #fff;
-    }
-
-    .btn-danger:hover {
-        background-color: #c0392b;
-    }
-</style>
+</body>
+</html>
