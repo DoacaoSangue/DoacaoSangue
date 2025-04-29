@@ -1,93 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Editar Usuário</title>
+    <meta charset="UTF-8">
+    <title>Alterar Usuário</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 400px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, select {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #004aad;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003080;
+        }
+    </style>
 </head>
 <body>
-<style>
-    body {
-        background-color: #222;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
 
-    .navbar {
-        background-color: #111;
-        padding: 15px;
-        display: flex;
-        gap: 20px;
-    }
+<div class="container">
+    <h1>Alterar Usuário</h1>
 
-    .navbar a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .navbar a:hover {
-        color: #f1c40f;
-    }
-
-    table {
-        width: 90%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        background-color: #333;
-    }
-
-    th, td {
-        border: 1px solid #444;
-        padding: 12px;
-        text-align: center;
-    }
-
-    th {
-        background-color: #111;
-        color: #f1c40f;
-    }
-
-    tr:nth-child(even) {
-        background-color: #2c2c2c;
-    }
-
-    .btn {
-        padding: 8px 15px;
-        margin: 2px;
-        text-decoration: none;
-        background-color: #f1c40f;
-        color: #000;
-        border: none;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .btn:hover {
-        background-color: #d4ac0d;
-    }
-
-    .btn-danger {
-        background-color: #e74c3c;
-        color: #fff;
-    }
-
-    .btn-danger:hover {
-        background-color: #c0392b;
-    }
-</style>
-
-    <h1>Editar Usuário</h1>
-    <form method="POST">
-        <label>Nome:</label>
-        <input type="text" name="nome" value="<?= $usuario['nome'] ?>" required><br>
-
-        <label>Email:</label>
-        <input type="email" name="email" value="<?= $usuario['email'] ?>" required><br>
-
-        <button type="submit">Salvar</button>
+    <form method="POST" action="painel-administrador.view.php?page=usuarios&crud=atualizar&id=<?php echo $_GET['id']; ?>">
+        <input type="text" name="nome" placeholder="Nome" value="<!-- Nome atual aqui -->" required>
+        <input type="email" name="email" placeholder="Email" value="<!-- Email atual aqui -->" required>
+        <select name="tipo" required>
+            <option value="admin" <!-- Se admin, coloca selected --> >Administrador</option>
+            <option value="comum" <!-- Se comum, coloca selected --> >Comum</option>
+        </select>
+        <button type="submit">Atualizar</button>
     </form>
-    <a href="usuarios.lista.view.php">Cancelar</a>
+</div>
+
 </body>
 </html>
