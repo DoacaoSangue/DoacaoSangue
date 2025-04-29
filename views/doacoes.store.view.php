@@ -1,73 +1,42 @@
+<h2>Cadastrar Doação</h2>
+<form action="../controllers/locais.store.controller.php" method="POST">
+    <div class="container">
+        <label for="nome">
+            Doador
+        </label>
+        <input type="text" name="nome" id="nome">
+        <label for="bairro">
+            Bairro
+        </label>
+        <input type="text" name="bairro" id="bairro">
+        <label for="rua">
+            Rua
+        </label>
+        <input type="text" name="rua" id="rua">
+        <label for="numero">
+            Número
+        </label>
+        <input type="number" name="numero" step="1" min="1" id="numero">
+    </div>
+    <button type="submit">Salvar</button>
+</form>
 <style>
-    body {
-        background-color: #222;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    .navbar {
-        background-color: #111;
-        padding: 15px;
+    .container {
+        margin-top: 5rem;
         display: flex;
-        gap: 20px;
+        flex-direction: column;
+        width: 60%;
     }
 
-    .navbar a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: bold;
+    .container>input {
+        margin-bottom: 1rem;
     }
 
-    .navbar a:hover {
-        color: #f1c40f;
+    button {
+        margin-top: 1rem;
     }
 
-    table {
-        width: 90%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        background-color: #333;
-    }
-
-    th, td {
-        border: 1px solid #444;
-        padding: 12px;
-        text-align: center;
-    }
-
-    th {
-        background-color: #111;
-        color: #f1c40f;
-    }
-
-    tr:nth-child(even) {
-        background-color: #2c2c2c;
-    }
-
-    .btn {
-        padding: 8px 15px;
-        margin: 2px;
-        text-decoration: none;
-        background-color: #f1c40f;
-        color: #000;
-        border: none;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .btn:hover {
-        background-color: #d4ac0d;
-    }
-
-    .btn-danger {
-        background-color: #e74c3c;
-        color: #fff;
-    }
-
-    .btn-danger:hover {
-        background-color: #c0392b;
+    h2 {
+        margin-bottom: 10px;
     }
 </style>

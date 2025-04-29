@@ -1,59 +1,62 @@
-<h3>Locais</h3>
+<h3>Doações</h3>
 
-<form action="painel-administrador.view.php?page=locais&crud=r" method="GET">
+<form action="painel-administrador.view.php?page=doacoes&crud=r" method="GET">
     <input type="text" name="buscar" >
     <input type="submit" value="Buscar">
 </form>
 
 <form action="" method="GET">
-    <input type="hidden" name="page" value="locais">
+    <input type="hidden" name="page" value="doacoes">
     <input type="hidden" name="crud" value="c">
-    <input type="submit" value="Adicionar Local">
+    <input type="submit" value="Adicionar Doação">
 </form>
 
 <?php
-if (!empty($_SESSION["locais"])): 
+if (!empty($_SESSION["doacoes"])): 
     $buscar = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 
     if ($buscar) {
-        $locaisFiltrados = array_filter($_SESSION["locais"], function ($local) use ($buscar) {
-            return stripos($local["nome"], $buscar) !== false;
+        $doacoesFiltrados = array_filter($_SESSION["doacoes"], function ($doacoes) use ($buscar) {
+            return stripos($doacoes["nome"], $buscar) !== false;
         });
     } else {
-        $locaisFiltrados = $_SESSION["locais"];
+        $doacoesFiltrados = $_SESSION["doacoes"];
     }
 ?>
 
-<!-- Exibindo os locais filtrados -->
-<?php if (!empty($locaisFiltrados)): ?>
+<!-- Exibindo os doacoes filtrados -->
+<?php if (!empty($doacoesFiltrados)): ?>
     <table width="70%">
         <thead>
             <tr>
-                <th>Nome do Local</th>
-                <th>Bairro</th>
-                <th>Rua</th>
-                <th>Número</th>
-                <th>Alterar/Excluir</th>
+                <th>Doador</th>
+                <th>Tipo Doador</th>
+                <th>Recebedor</th>
+                <th>Tipo Recebedor</th>
+                <th>Data</th>
+                <th>Local</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($locaisFiltrados as $index => $local): ?>
+            <?php foreach ($doacoesFiltrados as $index => $doacoes): ?>
                 <tr>
-                    <td><?= htmlspecialchars($local["nome"]) ?></td>
-                    <td><?= htmlspecialchars($local["bairro"]) ?></td>
-                    <td><?= htmlspecialchars($local["rua"]) ?></td>
-                    <td><?= htmlspecialchars($local["numero"]) ?></td>
+                    <td><?= htmlspecialchars($doacoes["nome_doador"]) ?></td>
+                    <td><?= htmlspecialchars($doacoes["tipo_sanguineo_doador"]) ?></td>
+                    <td><?= htmlspecialchars($doacoes["nome_recebedor"]) ?></td>
+                    <td><?= htmlspecialchars($doacoes["tipo_sanguineo_recebedor"]) ?></td>
+                    <td><?= htmlspecialchars($doacoes["data"]) ?></td>
+                    <td><?= htmlspecialchars($doacoes["nome_local"]) ?></td>
                     <td>
                         <form action="" method="GET">
-                            <input type="hidden" name="page" value="locais">
+                            <input type="hidden" name="page" value="doacoes">
                             <input type="hidden" name="crud" value="u">
-                            <input type="hidden" name="id" value="<?= $local['id_local'] ?>"> 
+                            <input type="hidden" name="id" value="<?= $doacoes['id_doacao'] ?>"> 
                             <input type="submit" value="Alterar">
                         </form>
                         <form action="" method="GET">
-                            <input type="hidden" name="page" value="locais">
+                            <input type="hidden" name="page" value="doacoes">
                             <input type="hidden" name="crud" value="d">
-                            <input type="hidden" name="id" value="<?= $local['id_local'] ?>"> 
+                            <input type="hidden" name="id" value="<?= $doacoes['id_doacao'] ?>"> 
                             <input type="submit" value="Excluir">
                         </form>
                     </td>
@@ -62,8 +65,8 @@ if (!empty($_SESSION["locais"])):
         </tbody>
     </table>
 <?php else: ?>
-    <p>Nenhum local encontrado para a busca.</p>
+    <p>Nenhuma doação encontrada para a busca.</p>
 <?php endif; ?>
 <?php else: ?>
-    <p>Nenhum local cadastrado ainda.</p>
+    <p>Nenhuma doação cadastrada ainda.</p>
 <?php endif; ?>

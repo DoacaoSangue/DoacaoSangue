@@ -11,6 +11,26 @@ class DoacaoModel
         return $conn;
     }
 
+    public static function buscarTodasDoacoes(){
+        $conn = self::conectar();
+        $sql = "SELECT * FROM doacoes";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $doacoes = [];
+            while ($row = $result->fetch_assoc()) {
+                $doacoes[] = $row;
+            }
+            $conn->close();
+
+            var_dump($doacoes); 
+            return $doacoes;
+        } else {
+            $conn->close();
+            return false; 
+        }
+    }
+
     public static function buscarDoacoesPorUsuario($idUsuario) {
         $conn = self::conectar();
     

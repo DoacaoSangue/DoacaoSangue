@@ -2,6 +2,10 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once '../controllers/tipo-sanguineo.controller.php';
+
+$controller = new TipoSanguineoController();
+$tipos = $controller->listarTipos();
 ?>
 <!doctype html>
 <html lang="pt-BR">
@@ -71,33 +75,12 @@ if (session_status() === PHP_SESSION_NONE) {
         <input type="text" name="complemento" id="complemento">
 
         <label for="id_tipo_sanguineo">Tipo Sanguíneo:</label>
-        <?php
-        // Conexão com o banco de dados
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "doacao_sangue";
-
-        $conn = new mysqli($servername, $username, $password, $dbname);
-
-        // Verificar conexão
-        if ($conn->connect_error) {
-            die("Conexão falhou: " . $conn->connect_error);
-        }
-
-        // Buscar os tipos sanguíneos
-        $sql = "SELECT id_tipo, tipo FROM tipos_sanguineos"; // ajuste os nomes conforme seu banco
-        $result = $conn->query($sql);
-        ?>
-        <select name="id_tipo_sanguineo" id="id_tipo_sanguineo" required>
-        <option value="">Selecione...</option>
-        <?php
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                echo '<option value="' . htmlspecialchars($row["id_tipo"]) . '">' . htmlspecialchars($row["tipo"]) . '</option>';
-            }
-        }
-        ?>
+        <select name="id_tipo_sanguineo" id="id_tipo_sanguineo">
+            <?php foreach ($tipos as $tipo): ?>
+                <option value="<?= htmlspecialchars($tipo['id_tipo']) ?>">
+                    <?= htmlspecialchars($tipo['tipo']) ?>
+                </option>
+            <?php endforeach; ?>
         </select>
 
         <label for="alergias">Alergias:</label>

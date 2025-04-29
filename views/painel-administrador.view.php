@@ -120,18 +120,18 @@ $crud = $_GET['crud'] ?? '';
             case 'doacoes':
                 switch($crud){
                     case 'c':
-                        require("locais.store.view.php");
+                        require("doacoes.store.view.php");
                         break;
                     case 'u':
-                        require("locais.update.view.php");
+                        require("doacoes.update.view.php");
                         break;
                     case 'r':
-                        require("locais.lista.view.php");
+                        require("doacoes.lista.view.php");
                         break;
                     case 'd':
-                        require_once('../controllers/locais.delete.controller.php');
+                        require_once('../controllers/doacoes.delete.controller.php');
                     default:
-                        require_once('../controllers/locais.lista.controller.php');
+                        require_once('../controllers/doacoes.lista.controller.php');
                 }
                 break;
             default:
