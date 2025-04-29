@@ -55,8 +55,8 @@
         <input type="text" name="nome" placeholder="Nome" value="<!-- Nome atual aqui -->" required>
         <input type="email" name="email" placeholder="Email" value="<!-- Email atual aqui -->" required>
         <select name="tipo" required>
-            <option value="admin" <!-- Se admin, coloca selected --> >Administrador</option>
-            <option value="comum" <!-- Se comum, coloca selected --> >Comum</option>
+            <option value="admin" >Administrador</option>
+            <option value="comum" >Comum</option>
         </select>
         <button type="submit">Atualizar</button>
     </form>
