@@ -11,6 +11,33 @@ class DoacaoModel
         return $conn;
     }
 
+    public static function cadastrarDoacao($idDoador, $idRecebedor, $idLocal, $data)
+    {
+        $conn = self::conectar();
+
+        $stmt = $conn->prepare("INSERT INTO doacoes (id_doador, id_recebedor, id_local, data) VALUES (?, ?, ?, ?)");
+        if (!$stmt) {
+            $conn->close();
+            return 'Erro na preparação da consulta: ' . $conn->error;
+        }
+
+        $stmt->bind_param("iiis", $idDoador, $idRecebedor, $idLocal, $data);
+
+        $resultado = $stmt->execute();
+
+        if (!$resultado) {
+            $erro = $stmt->error;
+            $stmt->close();
+            $conn->close();
+            return "Erro ao cadastrar a doação: $erro";
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        return true;
+    }
+
     public static function buscarTodasDoacoes(){
         $conn = self::conectar();
         $sql = "SELECT * FROM doacoes";

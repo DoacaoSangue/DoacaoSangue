@@ -50,6 +50,68 @@ class UsuarioModel
         return $resultado ? true : 'Erro ao cadastrar o usuário. Tente novamente.';
     }
 
+    public static function listarDoadores()
+    {
+        $conn = self::conectar();
+
+        $sql = "SELECT u.id_usuario, u.nome, t.tipo AS tipo_sanguineo 
+                FROM usuarios u
+                INNER JOIN tipos_sanguineos t ON u.id_tipo_sanguineo = t.id_tipo
+                WHERE u.doar = true";
+
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            die("Erro na preparação da consulta: " . $conn->error);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $doadores = [];
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $doadores[] = $row;
+            }
+            $result->free();
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        return $doadores;
+    }
+
+    public static function listarRecebedores()
+    {
+        $conn = self::conectar();
+
+        $sql = "SELECT u.id_usuario, u.nome, t.tipo AS tipo_sanguineo 
+                FROM usuarios u
+                INNER JOIN tipos_sanguineos t ON u.id_tipo_sanguineo = t.id_tipo
+                WHERE u.receber = true";
+
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            die("Erro na preparação da consulta: " . $conn->error);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $recebedores = [];
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $recebedores[] = $row;
+            }
+            $result->free();
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        return $recebedores;
+    }
+
     public static function buscarStatusDoacao($idUsuario){
         $conn = self::conectar();
 

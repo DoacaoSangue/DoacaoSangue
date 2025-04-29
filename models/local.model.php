@@ -37,8 +37,6 @@ class LocalModel
                 $locais[] = $row;
             }
             $conn->close();
-
-            var_dump($locais);  // Isso vai mostrar os dados retornados pelo banco
             return $locais;
         } else {
             $conn->close();
