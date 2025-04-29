@@ -8,6 +8,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rua = $_POST['rua'] ?? '';
     $numero = $_POST['numero'] ?? '';
 
+    // Verificação: nenhum campo pode estar vazio
+    if (empty($id) || empty($nome) || empty($bairro) || empty($rua) || empty($numero)) {
+        echo "<script>
+                alert('Todos os campos são obrigatórios.');
+                window.location.href = '../views/painel-administrador.view.php?page=locais&crud=';
+              </script>";
+        exit;
+    }
+
     $resultado = LocalModel::atualizarLocal($id, $nome, $bairro, $rua, $numero);
 
     if ($resultado === true) {

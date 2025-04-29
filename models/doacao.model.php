@@ -78,6 +78,34 @@ class DoacaoModel
         }
     }
 
+    public static function excluirDoacao($id) {
+        $conn = self::conectar();
+    
+        // Verifica se o ID foi passado
+        if (empty($id)) {
+            return "ID inválido.";
+        }
+    
+        $stmt = $conn->prepare("DELETE FROM doacoes WHERE id_doacao = ?");
+        if (!$stmt) {
+            $conn->close();
+            return "Erro na preparação da consulta: " . $conn->error;
+        }
+    
+        $stmt->bind_param("i", $id);
+    
+        if ($stmt->execute()) {
+            $stmt->close();
+            $conn->close();
+            return true;
+        } else {
+            $erro = $stmt->error;
+            $stmt->close();
+            $conn->close();
+            return "Erro ao excluir doação: " . $erro;
+        }
+    }
+
     public static function buscarDoacaoPorId($id) {
         $conn = self::conectar();
     

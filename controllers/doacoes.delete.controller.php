@@ -1,11 +1,17 @@
 <?php
-session_start();
-require_once 'conexao.php';
 
-$id = $_GET['id'];
+require_once('../models/doacao.model.php');
 
-$stmt = $conn->prepare("DELETE FROM doacoes WHERE id = ?");
-$stmt->execute([$id]);
+$id = $_GET['id'] ?? '';  
 
-header("Location: ../views/doacoes.lista.view.php");
-exit();
+if ($id !== '') {
+    DoacaoModel::excluirDoacao($id);
+    echo "<script>
+        alert('Doação excluída com sucesso!');
+        window.location.href = '../views/painel-administrador.view.php?page=doacoes&crud=';
+      </script>";
+      exit();
+} else{
+    echo "<script>alert('Erro ao excluir Doação!');
+     window.location.href = '../views/painel-administrador.view.php?page=doacoes&crud=';</script>";
+}
