@@ -76,6 +76,30 @@ class UsuarioModel
         return $resultado;
     }
 
+    public static function validarLogin($email, $senha)
+    {
+        $conn = self::conectar();
+        $stmt = $conn->prepare("SELECT email, senha FROM usuarios WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($usuario_email, $senhaHash);
+            $stmt->fetch();
+
+            if (password_verify($senha, $senhaHash)) {
+                $stmt->close();
+                $conn->close();
+                return $usuario_email;
+            }
+        }
+
+        $stmt->close();
+        $conn->close();
+        return false;
+    }
+
     public static function atualizarStatusDoacao($idUsuario, $campo)
     {
         $conn = self::conectar();
