@@ -77,7 +77,6 @@ $crud = $_GET['crud'] ?? '';
     <header>
         <ul>
             <li><a href="?page=locais">Locais</a></li>
-            <li><a href="?page=usuarios">Usuários</a></li>
             <li><a href="?page=doacoes">Doações</a></li>
         </ul>
         <ul class="sair">
