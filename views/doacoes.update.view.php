@@ -1,96 +1,74 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Editar Doação</title>
-</head>
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once '../controllers/campos-doacao.controller.php';
+require_once '../models/doacao.model.php';
+
+$controller = new CamposDoacaoController();
+$doadores = $controller->listarDoadores();
+$recebedores = $controller->listarRecebedores();
+$locais = $controller->listarLocais();
+$id = $_GET['id'] ?? '';  
+$doacao = DoacaoModel::buscarDoacaoPorId($id); 
+?>
+<h2>Alterar Doação</h2>
+<form action="../controllers/doacoes.update.controller.php" method="POST">
+    <input type="hidden" name="id_doacao" value="<?= htmlspecialchars($doacao['id_doacao']) ?>">
+    
+    <div class="container">
+        <label for="id_doador">Doador:</label>
+        <select name="id_doador" id="id_doador">
+            <?php foreach ($doadores as $doador): ?>
+                <option value="<?= htmlspecialchars($doador['id_usuario']) ?>"
+                    <?= ($doador['nome'] === $doacao['nome_doador']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($doador['nome']) . "      " .  htmlspecialchars($doador['tipo_sanguineo']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <label for="id_recebedor">Recebedor:</label>
+        <select name="id_recebedor" id="id_recebedor">
+            <?php foreach ($recebedores as $recebedor): ?>
+                <option value="<?= htmlspecialchars($recebedor['id_usuario']) ?>"
+                    <?= ($recebedor['nome'] === $doacao['nome_recebedor']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($recebedor['nome']) . "      " .  htmlspecialchars($recebedor['tipo_sanguineo']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <label for="id_local">Local:</label>
+        <select name="id_local" id="id_local">
+            <?php foreach ($locais as $local): ?>
+                <option value="<?= htmlspecialchars($local['id_local']) ?>"
+                    <?= ($local['nome'] === $doacao['nome_local']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($local['nome']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <label for="data">Data da Doação:</label>
+        <input type="date" name="data" id="data" value="<?= htmlspecialchars($doacao['data']) ?>">
+    </div>
+    <button type="submit">Salvar Alterações</button>
+</form>
 <style>
-    body {
-        background-color: #222;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    .navbar {
-        background-color: #111;
-        padding: 15px;
+    .container {
+        margin-top: 5rem;
         display: flex;
-        gap: 20px;
+        flex-direction: column;
+        width: 60%;
     }
 
-    .navbar a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: bold;
+    .container>input {
+        margin-bottom: 1rem;
     }
 
-    .navbar a:hover {
-        color: #f1c40f;
+    button {
+        margin-top: 1rem;
     }
 
-    table {
-        width: 90%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        background-color: #333;
-    }
-
-    th, td {
-        border: 1px solid #444;
-        padding: 12px;
-        text-align: center;
-    }
-
-    th {
-        background-color: #111;
-        color: #f1c40f;
-    }
-
-    tr:nth-child(even) {
-        background-color: #2c2c2c;
-    }
-
-    .btn {
-        padding: 8px 15px;
-        margin: 2px;
-        text-decoration: none;
-        background-color: #f1c40f;
-        color: #000;
-        border: none;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .btn:hover {
-        background-color: #d4ac0d;
-    }
-
-    .btn-danger {
-        background-color: #e74c3c;
-        color: #fff;
-    }
-
-    .btn-danger:hover {
-        background-color: #c0392b;
+    h2 {
+        margin-bottom: 10px;
     }
 </style>
-
-<body>
-    <h1>Editar Doação</h1>
-    <form method="POST">
-        <label>Data:</label>
-        <input type="date" name="data" value="<?= $doacao['data'] ?>" required><br>
-
-        <label>Tipo Sanguíneo:</label>
-        <input type="text" name="tipo_sangue" value="<?= $doacao['tipo_sangue'] ?>" required><br>
-
-        <label>Local:</label>
-        <input type="text" name="local" value="<?= $doacao['local'] ?>" required><br>
-
-        <button type="submit">Salvar</button>
-    </form>
-    <a href="doacoes.lista.view.php">Cancelar</a>
-</body>
-</html>

@@ -6,7 +6,7 @@ $local = LocalModel::buscarLocalPorId($id);
 ?>
 
 <h2>Alterar local</h2>
-<form action="http://localhost/DoacaoSangue/controllers/locais.update.controller.php" method="POST">
+<form action="../controllers/locais.update.controller.php" method="POST">
     <input type="hidden" name="id" value="<?= htmlspecialchars($id) ?>">
     
     <div class="container">

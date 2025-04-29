@@ -78,6 +78,80 @@ class DoacaoModel
         }
     }
 
+    public static function buscarDoacaoPorId($id) {
+        $conn = self::conectar();
+    
+        $sql = "
+            SELECT 
+                d.id_doacao,
+                d.data,
+                ld.nome AS nome_local,
+    
+                u1.nome AS nome_doador,
+                ts1.tipo AS tipo_sanguineo_doador,
+    
+                u2.nome AS nome_recebedor,
+                ts2.tipo AS tipo_sanguineo_recebedor
+    
+            FROM doacoes d
+            JOIN locais ld ON d.id_local = ld.id_local
+            JOIN usuarios u1 ON d.id_doador = u1.id_usuario
+            JOIN tipos_sanguineos ts1 ON u1.id_tipo_sanguineo = ts1.id_tipo
+    
+            JOIN usuarios u2 ON d.id_recebedor = u2.id_usuario
+            JOIN tipos_sanguineos ts2 ON u2.id_tipo_sanguineo = ts2.id_tipo
+    
+            WHERE d.id_doacao = ?
+            LIMIT 1
+        ";
+    
+        $stmt = $conn->prepare($sql);
+    
+        if (!$stmt) {
+            die("Erro na preparação da consulta: " . $conn->error);
+        }
+    
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $doacao = $result->fetch_assoc();
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $doacao ? $doacao : false;
+    }
+
+    public static function atualizarDoacao($id, $idDoador, $idRecebedor, $idLocal, $data) {
+        $conn = self::conectar();
+    
+        $sql = "
+            UPDATE doacoes 
+            SET id_doador = ?, 
+                id_recebedor = ?, 
+                id_local = ?, 
+                data = ?
+            WHERE id_doacao = ?
+        ";
+    
+        $stmt = $conn->prepare($sql);
+    
+        if (!$stmt) {
+            $conn->close();
+            return false; // Erro ao preparar a query
+        }
+    
+        $stmt->bind_param('iiisi', $idDoador, $idRecebedor, $idLocal, $data, $id);
+    
+        $resultado = $stmt->execute();
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $resultado;
+    }
+
     public static function buscarDoacaoPorDoador($nomeDoador) {
         $conn = self::conectar();
     
