@@ -1,209 +1,156 @@
 <?php
 
+namespace App\Models;
+
+use App\Database\Connection;
+use PDO;
+use PDOException;
+
 class UsuarioModel
 {
-    public static function conectar()
+    public static function existeEmail(string $email): bool
     {
-        $conn = new mysqli('localhost', 'root', '', 'doacao_sangue');
-        if ($conn->connect_error) {
-            die("Erro de conexão: " . $conn->connect_error);
+        try {
+            $conn = Connection::getInstance();
+
+            $stmt = $conn->prepare("SELECT email FROM usuarios WHERE email = ?");
+            $stmt->execute([$email]);
+
+            return $stmt->fetchColumn() !== false;
+        } catch (PDOException $e) {
+
+            return false;
         }
-        return $conn;
     }
 
-    public static function existeEmail($email)
-    {
-        $conn = self::conectar();
-        $stmt = $conn->prepare("SELECT email FROM usuarios WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-        $existe = $stmt->num_rows > 0;
-        $stmt->close();
-        $conn->close();
-        return $existe;
-    }
-
-    public static function cadastrarUsuario($nome, $email, $senha, $telefone, $endereco, $tipo, $alergias)
-    {
+    public static function cadastrarUsuario(
+        string $nome,
+        string $email,
+        string $senha,
+        string $telefone,
+        string $endereco,
+        int $tipo,
+        string $alergias
+    ): bool|string {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return 'Erro: O formato do email é inválido.';
+        }
 
         if (self::existeEmail($email)) {
             return 'Erro: O email já está em uso.';
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return 'Erro: O formato do email é inválido.';
-        }
-
         $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-        $conn = self::conectar();
+        try {
+            $conn = Connection::getInstance();
 
-        $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha, telefone, endereco, id_tipo_sanguineo, alergias) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssis", $nome, $email, $senhaHash, $telefone, $endereco, $tipo, $alergias);
+            $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha, telefone, endereco, id_tipo_sanguineo, alergias) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $resultado = $stmt->execute([$nome, $email, $senhaHash, $telefone, $endereco, $tipo, $alergias]);
 
-        $resultado = $stmt->execute();
+            return $resultado;
+        } catch (PDOException $e) {
 
-        $stmt->close();
-        $conn->close();
-
-        return $resultado ? true : 'Erro ao cadastrar o usuário. Tente novamente.';
+            return 'Erro ao cadastrar o usuário. Tente novamente.';
+        }
     }
 
-    public static function listarDoadores()
+    public static function listarDoadores(): array
     {
-        $conn = self::conectar();
+        try {
+            $conn = Connection::getInstance();
 
-        $sql = "SELECT u.id_usuario, u.nome, t.tipo AS tipo_sanguineo 
-                FROM usuarios u
-                INNER JOIN tipos_sanguineos t ON u.id_tipo_sanguineo = t.id_tipo
-                WHERE u.doar = true";
+            $sql = "SELECT u.id_usuario, u.nome, t.tipo AS tipo_sanguineo 
+                    FROM usuarios u
+                    INNER JOIN tipos_sanguineos t ON u.id_tipo_sanguineo = t.id_tipo
+                    WHERE u.doar = true";
 
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            die("Erro na preparação da consulta: " . $conn->error);
+            $stmt = $conn->query($sql);
+            $doadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $doadores ?: [];
+        } catch (PDOException $e) {
+            return [];
         }
+    }
 
-        $stmt->execute();
-        $result = $stmt->get_result();
+    public static function listarRecebedores(): array
+    {
+        try {
+            $conn = Connection::getInstance();
 
-        $doadores = [];
-        if ($result && $result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $doadores[] = $row;
+            $sql = "SELECT u.id_usuario, u.nome, t.tipo AS tipo_sanguineo 
+                    FROM usuarios u
+                    INNER JOIN tipos_sanguineos t ON u.id_tipo_sanguineo = t.id_tipo
+                    WHERE u.receber = true";
+
+            $stmt = $conn->query($sql);
+            $recebedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $recebedores ?: [];
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
+    public static function buscarStatusDoacao(int $idUsuario): ?array
+    {
+        try {
+            $conn = Connection::getInstance();
+
+            $stmt = $conn->prepare("SELECT doar, receber FROM usuarios WHERE id_usuario = ?");
+            $stmt->execute([$idUsuario]);
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $resultado ?: null;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public static function validarLogin(string $email, string $senha): bool|string
+    {
+        try {
+            $conn = Connection::getInstance();
+
+            $stmt = $conn->prepare("SELECT email, senha FROM usuarios WHERE email = ?");
+            $stmt->execute([$email]);
+
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($usuario && password_verify($senha, $usuario['senha'])) {
+                return $usuario['email'];
             }
-            $result->free();
+
+            return false;
+        } catch (PDOException $e) {
+            return false;
         }
-
-        $stmt->close();
-        $conn->close();
-
-        return $doadores;
     }
 
-    public static function listarRecebedores()
+    public static function atualizarStatusDoacao(int $idUsuario, string $campo): ?array
     {
-        $conn = self::conectar();
-
-        $sql = "SELECT u.id_usuario, u.nome, t.tipo AS tipo_sanguineo 
-                FROM usuarios u
-                INNER JOIN tipos_sanguineos t ON u.id_tipo_sanguineo = t.id_tipo
-                WHERE u.receber = true";
-
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            die("Erro na preparação da consulta: " . $conn->error);
+        if (!in_array($campo, ['doar', 'receber'], true)) {
+            throw new \InvalidArgumentException("Campo inválido para atualização.");
         }
 
-        $stmt->execute();
-        $result = $stmt->get_result();
+        try {
+            $conn = Connection::getInstance();
 
-        $recebedores = [];
-        if ($result && $result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $recebedores[] = $row;
-            }
-            $result->free();
+            $sql = "UPDATE usuarios SET $campo = 1 WHERE id_usuario = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$idUsuario]);
+
+            $stmt2 = $conn->prepare("SELECT doar, receber FROM usuarios WHERE id_usuario = ?");
+            $stmt2->execute([$idUsuario]);
+
+            $resultado = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+            return $resultado ?: null;
+        } catch (PDOException $e) {
+            return null;
         }
-
-        $stmt->close();
-        $conn->close();
-
-        return $recebedores;
-    }
-
-    public static function buscarStatusDoacao($idUsuario){
-        $conn = self::conectar();
-
-        $stmt = $conn->prepare("SELECT doar, receber FROM usuarios WHERE id_usuario = ?");
-        if (!$stmt) {
-            die("Erro na preparação da consulta: " . $conn->error);
-        }
-
-        $stmt->bind_param("i", $idUsuario);
-        $stmt->execute();
-        $stmt->bind_result($doar, $receber);
-
-        $resultado = null;
-        if ($stmt->fetch()) {
-            $resultado = [
-                'doar' => $doar,
-                'receber' => $receber
-            ];
-        }
-
-        $stmt->close();
-        $conn->close();
-
-        return $resultado;
-    }
-
-    public static function validarLogin($email, $senha)
-    {
-        $conn = self::conectar();
-        $stmt = $conn->prepare("SELECT email, senha FROM usuarios WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            $stmt->bind_result($usuario_email, $senhaHash);
-            $stmt->fetch();
-
-            if (password_verify($senha, $senhaHash)) {
-                $stmt->close();
-                $conn->close();
-                return $usuario_email;
-            }
-        }
-
-        $stmt->close();
-        $conn->close();
-        return false;
-    }
-
-    public static function atualizarStatusDoacao($idUsuario, $campo)
-    {
-        $conn = self::conectar();
-
-        // Verifica se o campo é válido (para evitar SQL Injection)
-        if (!in_array($campo, ['doar', 'receber'])) {
-            die("Campo inválido para atualização.");
-        }
-
-        // Monta o SQL dinamicamente de forma segura
-        $sql = "UPDATE usuarios SET $campo = 1 WHERE id_usuario = ?";
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            die("Erro na preparação da atualização: " . $conn->error);
-        }
-
-        $stmt->bind_param("i", $idUsuario);
-        $stmt->execute();
-        $stmt->close();
-
-        // Agora busca o novo status do usuário
-        $stmt = $conn->prepare("SELECT doar, receber FROM usuarios WHERE id_usuario = ?");
-        if (!$stmt) {
-            die("Erro na preparação da consulta: " . $conn->error);
-        }
-
-        $stmt->bind_param("i", $idUsuario);
-        $stmt->execute();
-        $stmt->bind_result($doar, $receber);
-
-        $resultado = null;
-        if ($stmt->fetch()) {
-            $resultado = [
-                'doar' => $doar,
-                'receber' => $receber
-            ];
-        }
-
-        $stmt->close();
-        $conn->close();
-
-        return $resultado;
     }
 }
 

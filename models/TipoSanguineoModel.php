@@ -1,33 +1,27 @@
 <?php
 
+namespace App\Models;
+
+use App\Database\Connection;
+use PDO;
+use PDOException;
+
 class TipoSanguineoModel
 {
-    public static function conectar()
+    public function listarTipos(): array
     {
-        $conn = new mysqli('localhost', 'root', '', 'doacao_sangue');
-        if ($conn->connect_error) {
-            die("Erro de conexão: " . $conn->connect_error);
+        try {
+            $conn = Connection::getInstance();
+
+            $sql = "SELECT id_tipo, tipo FROM tipos_sanguineos";
+            $stmt = $conn->query($sql);
+
+            $tipos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $tipos ?: [];
+
+        } catch (PDOException $e) {
+            return [];
         }
-        return $conn;
-    }
-
-    public function listarTipos()
-    {
-        $conn = self::conectar();
-
-        $sql = "SELECT id_tipo, tipo FROM tipos_sanguineos";
-        $result = $conn->query($sql);
-
-        $tipos = [];
-        if ($result && $result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $tipos[] = $row;
-            }
-            $result->free();
-        }
-
-        $conn->close();
-        return $tipos;
     }
 }
-?>

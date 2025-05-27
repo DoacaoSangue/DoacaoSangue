@@ -1,62 +1,48 @@
 <?php
 
+namespace App\Models;
+
+use App\Database\Connection;
+use PDO;
+use PDOException;
+
 class RestricaoModel
 {
-    public static function conectar()
-    {
-        $conn = new mysqli('localhost', 'root', '', 'doacao_sangue');
-        if ($conn->connect_error) {
-            die("Erro de conexão: " . $conn->connect_error);
-        }
-        return $conn;
-    }
-
     public static function verificarRestricao($idDoador, $idRecebedor)
-{
-    $conn = self::conectar();
+    {
+        try {
+            $conn = Connection::getInstance();
 
-    // Primeiro, buscar o tipo sanguíneo do doador e do recebedor
-    $stmt = $conn->prepare("SELECT id_usuario, id_tipo_sanguineo FROM usuarios WHERE id_usuario IN (?, ?)");
-    if (!$stmt) {
-        $conn->close();
-        die("Erro na preparação da consulta: " . $conn->error);
+            $stmt = $conn->prepare("SELECT id_usuario, id_tipo_sanguineo FROM usuarios WHERE id_usuario IN (:idDoador, :idRecebedor)");
+
+            $stmt = $conn->prepare("SELECT id_usuario, id_tipo_sanguineo FROM usuarios WHERE id_usuario IN (?, ?)");
+            $stmt->bindValue(1, $idDoador, PDO::PARAM_INT);
+            $stmt->bindValue(2, $idRecebedor, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $tipos = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $tipos[$row['id_usuario']] = $row['id_tipo_sanguineo'];
+            }
+
+            if (!isset($tipos[$idDoador]) || !isset($tipos[$idRecebedor])) {
+                return ['erro' => 'Tipo sanguíneo não encontrado para um dos usuários.'];
+            }
+
+            $idTipoDoador = $tipos[$idDoador];
+            $idTipoRecebedor = $tipos[$idRecebedor];
+
+            $stmt2 = $conn->prepare("SELECT * FROM restricoes WHERE id_tipo_doador = :idTipoDoador AND id_tipo_recebedor = :idTipoRecebedor");
+            $stmt2->bindParam(':idTipoDoador', $idTipoDoador, PDO::PARAM_INT);
+            $stmt2->bindParam(':idTipoRecebedor', $idTipoRecebedor, PDO::PARAM_INT);
+            $stmt2->execute();
+
+            $restricao = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+            return $restricao ?: null;
+
+        } catch (PDOException $e) {
+            return ['erro' => 'Erro no banco de dados: ' . $e->getMessage()];
+        }
     }
-
-    $stmt->bind_param("ii", $idDoador, $idRecebedor);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-
-    $tipos = [];
-    while ($row = $resultado->fetch_assoc()) {
-        $tipos[$row['id_usuario']] = $row['id_tipo_sanguineo'];
-    }
-    $stmt->close();
-
-    // Verificar se encontrou os dois usuários
-    if (!isset($tipos[$idDoador]) || !isset($tipos[$idRecebedor])) {
-        $conn->close();
-        return ['erro' => 'Tipo sanguíneo não encontrado para um dos usuários.'];
-    }
-
-    $idTipoDoador = $tipos[$idDoador];
-    $idTipoRecebedor = $tipos[$idRecebedor];
-
-    // Agora, verificar se existe restrição entre os tipos sanguíneos
-    $stmt2 = $conn->prepare("SELECT * FROM restricoes WHERE id_tipo_doador = ? AND id_tipo_recebedor = ?");
-    if (!$stmt2) {
-        $conn->close();
-        die("Erro na preparação da consulta: " . $conn->error);
-    }
-
-    $stmt2->bind_param("ii", $idTipoDoador, $idTipoRecebedor);
-    $stmt2->execute();
-    $resultado2 = $stmt2->get_result();
-
-    $restricao = $resultado2->fetch_assoc(); 
-    $stmt2->close();
-    $conn->close();
-
-    return $restricao; 
 }
-}
-?>

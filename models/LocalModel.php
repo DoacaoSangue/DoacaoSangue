@@ -1,111 +1,114 @@
 <?php
 
+namespace App\Models;
+
+use App\Database\Connection;
+use PDO;
+use PDOException;
+
 class LocalModel
 {
-    public static function conectar()
+    public static function cadastrarLocal($nome, $bairro, $rua, $numero)
     {
-        $conn = new mysqli('localhost', 'root', '', 'doacao_sangue');
-        if ($conn->connect_error) {
-            die("Erro de conexão: " . $conn->connect_error);
+        try {
+            $conn = Connection::getInstance();
+
+            $stmt = $conn->prepare("INSERT INTO locais (nome, bairro, rua, numero) VALUES (:nome, :bairro, :rua, :numero)");
+            $stmt->bindParam(':nome', $nome);
+            $stmt->bindParam(':bairro', $bairro);
+            $stmt->bindParam(':rua', $rua);
+            $stmt->bindParam(':numero', $numero, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            return true;
+        } catch (PDOException $e) {
+            return 'Erro ao cadastrar o local: ' . $e->getMessage();
         }
-        return $conn;
     }
 
-    public static function cadastrarLocal($nome, $bairro, $rua, $numero){
+    public static function buscarTodosLocais()
+    {
+        try {
+            $conn = Connection::getInstance();
 
-        $conn = self::conectar();
+            $stmt = $conn->query("SELECT * FROM locais");
+            $locais = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $conn->prepare("INSERT INTO locais (nome, bairro, rua, numero) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssi", $nome, $bairro, $rua, $numero);
-
-        $resultado = $stmt->execute();
-
-        $stmt->close();
-        $conn->close();
-
-        return $resultado ? true : 'Erro ao cadastrar o local. Tente novamente.';
+            return $locais ?: false;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 
-    public static function buscarTodosLocais(){
-        $conn = self::conectar();
-        $sql = "SELECT * FROM locais";
-        $result = $conn->query($sql);
+    public static function buscarLocalPorId($id)
+    {
+        try {
+            $conn = Connection::getInstance();
 
-        if ($result->num_rows > 0) {
-            $locais = [];
-            while ($row = $result->fetch_assoc()) {
-                $locais[] = $row;
-            }
-            $conn->close();
+            $stmt = $conn->prepare("SELECT * FROM locais WHERE id_local = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $local = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $local ?: null;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public static function buscarLocalPorNome($nome)
+    {
+        try {
+            $conn = Connection::getInstance();
+
+            $nomeBusca = "%" . $nome . "%";
+            $stmt = $conn->prepare("SELECT * FROM locais WHERE nome LIKE :nome");
+            $stmt->bindParam(':nome', $nomeBusca);
+            $stmt->execute();
+
+            $locais = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
             return $locais;
-        } else {
-            $conn->close();
-            return false; // Nenhum local encontrado
+        } catch (PDOException $e) {
+            return [];
         }
     }
-    
-    public static function buscarLocalPorId($id){
-        $conn = self::conectar();
 
-        $stmt = $conn->prepare("SELECT * FROM locais WHERE id_local = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
+    public static function atualizarLocal($id, $nome, $bairro, $rua, $numero)
+    {
+        try {
+            $conn = Connection::getInstance();
 
-        $local = $resultado->fetch_assoc();
+            $stmt = $conn->prepare("UPDATE locais SET nome = :nome, bairro = :bairro, rua = :rua, numero = :numero WHERE id_local = :id");
+            $stmt->bindParam(':nome', $nome);
+            $stmt->bindParam(':bairro', $bairro);
+            $stmt->bindParam(':rua', $rua);
+            $stmt->bindParam(':numero', $numero, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-        $stmt->close();
-        $conn->close();
+            $stmt->execute();
 
-        return $local;
-    }
-
-    public static function buscarLocalPorNome($nome){
-        $conn = self::conectar();
-    
-        // Usando LIKE para busca parcial
-        $stmt = $conn->prepare("SELECT * FROM locais WHERE nome LIKE ?");
-        $nomeBusca = "%" . $nome . "%"; // O % permite busca parcial antes e depois do nome
-        $stmt->bind_param("s", $nomeBusca);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-    
-        $locais = [];
-        while ($row = $resultado->fetch_assoc()) {
-            $locais[] = $row;
+            return true;
+        } catch (PDOException $e) {
+            return 'Erro ao atualizar o local: ' . $e->getMessage();
         }
-    
-        $stmt->close();
-        $conn->close();
-    
-        return $locais;
     }
 
-    public static function atualizarLocal($id, $nome, $bairro, $rua, $numero){
-        $conn = self::conectar();
+    public static function excluirLocal($id)
+    {
+        try {
+            $conn = Connection::getInstance();
 
-        $stmt = $conn->prepare("UPDATE locais SET nome = ?, bairro = ?, rua = ?, numero = ? WHERE id_local = ?");
-        $stmt->bind_param("sssii", $nome, $bairro, $rua, $numero, $id);
+            $stmt = $conn->prepare("DELETE FROM locais WHERE id_local = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-        $resultado = $stmt->execute();
+            $stmt->execute();
 
-        $stmt->close();
-        $conn->close();
-
-        return $resultado ? true : 'Erro ao atualizar o local. Tente novamente.';
-    }
-
-    public static function excluirLocal($id){
-        $conn = self::conectar();
-
-        $stmt = $conn->prepare("DELETE FROM locais WHERE id_local = ?");
-        $stmt->bind_param("i", $id);
-
-        $resultado = $stmt->execute();
-
-        $stmt->close();
-        $conn->close();
-
-        return $resultado ? true : 'Erro ao excluir o local. Tente novamente.';
+            return true;
+        } catch (PDOException $e) {
+            return 'Erro ao excluir o local: ' . $e->getMessage();
+        }
     }
 }
