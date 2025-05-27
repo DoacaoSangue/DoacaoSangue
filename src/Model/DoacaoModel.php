@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Model;
 
 use App\Database\Connection;
 use PDO;
@@ -70,6 +70,9 @@ class DoacaoModel
         $sql = "
             SELECT 
                 d.id_doacao,
+                d.id_doador,
+                d.id_recebedor,
+                d.id_local,
                 d.data,
                 ld.nome AS nome_local,
                 u1.nome AS nome_doador,

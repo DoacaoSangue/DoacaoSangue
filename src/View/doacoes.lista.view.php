@@ -1,33 +1,33 @@
 <h3>Doações</h3>
 
-<form action="" method="GET">
+<form action="/DoacaoSangue/painel-administrador" method="GET" style="margin-bottom: 1rem;">
     <input type="hidden" name="page" value="doacoes">
-    <input type="hidden" name="crud" value="">
-    <input type="text" name="buscar_doacoes" >
+    <input type="hidden" name="crud" value="r">
+    <input type="text" name="buscar_doacoes" placeholder="Buscar doador..." value="<?= isset($_GET['buscar_doacoes']) ? htmlspecialchars($_GET['buscar_doacoes']) : '' ?>">
     <input type="submit" value="Buscar">
 </form>
 
-<form action="" method="GET">
+<form action="/DoacaoSangue/painel-administrador" method="GET" style="margin-bottom: 2rem;">
     <input type="hidden" name="page" value="doacoes">
     <input type="hidden" name="crud" value="c">
     <input type="submit" value="Adicionar Doação">
 </form>
 
 <?php
-if (!empty($_SESSION["doacoes"])): 
-    $buscar_doacoes = isset($_GET['buscar_doacoes']) ? trim($_GET['buscar_doacoes']) : '';
+// $doacoes deve ser passado pelo controller
+$buscar_doacoes = isset($_GET['buscar_doacoes']) ? trim($_GET['buscar_doacoes']) : '';
 
+if (!empty($doacoes)) {
     if ($buscar_doacoes) {
-        $doacoesFiltrados = array_filter($_SESSION["doacoes"], function ($doacoes) use ($buscar_doacoes) {
-            return stripos($doacoes["nome_doador"], $buscar_doacoes) !== false;
+        $doacoesFiltradas = array_filter($doacoes, function ($doacao) use ($buscar_doacoes) {
+            return stripos($doacao["nome_doador"], $buscar_doacoes) !== false;
         });
     } else {
-        $doacoesFiltrados = $_SESSION["doacoes"];
+        $doacoesFiltradas = $doacoes;
     }
 ?>
 
-<!-- Exibindo os doacoes filtrados -->
-<?php if (!empty($doacoesFiltrados)): ?>
+<?php if (!empty($doacoesFiltradas)): ?>
     <table width="70%">
         <thead>
             <tr>
@@ -37,29 +37,30 @@ if (!empty($_SESSION["doacoes"])):
                 <th>Tipo Recebedor</th>
                 <th>Data</th>
                 <th>Local</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($doacoesFiltrados as $index => $doacoes): ?>
+            <?php foreach ($doacoesFiltradas as $doacao): ?>
                 <tr>
-                    <td><?= htmlspecialchars($doacoes["nome_doador"]) ?></td>
-                    <td><?= htmlspecialchars($doacoes["tipo_sanguineo_doador"]) ?></td>
-                    <td><?= htmlspecialchars($doacoes["nome_recebedor"]) ?></td>
-                    <td><?= htmlspecialchars($doacoes["tipo_sanguineo_recebedor"]) ?></td>
-                    <td><?= htmlspecialchars($doacoes["data"]) ?></td>
-                    <td><?= htmlspecialchars($doacoes["nome_local"]) ?></td>
-                    <td>
-                        <form action="" method="GET">
+                    <td><?= htmlspecialchars($doacao["nome_doador"]) ?></td>
+                    <td><?= htmlspecialchars($doacao["tipo_sanguineo_doador"]) ?></td>
+                    <td><?= htmlspecialchars($doacao["nome_recebedor"]) ?></td>
+                    <td><?= htmlspecialchars($doacao["tipo_sanguineo_recebedor"]) ?></td>
+                    <td><?= htmlspecialchars($doacao["data"]) ?></td>
+                    <td><?= htmlspecialchars($doacao["nome_local"]) ?></td>
+                    <td style="display: flex; gap: 0.5rem;">
+                        <form action="/DoacaoSangue/painel-administrador" method="GET" style="display:inline;">
                             <input type="hidden" name="page" value="doacoes">
                             <input type="hidden" name="crud" value="u">
-                            <input type="hidden" name="id" value="<?= $doacoes['id_doacao'] ?>"> 
+                            <input type="hidden" name="id" value="<?= htmlspecialchars($doacao['id_doacao']) ?>">
                             <input type="submit" value="Alterar">
                         </form>
-                        <form action="" method="GET">
+                        <form action="/DoacaoSangue/painel-administrador" method="GET" style="display:inline;">
                             <input type="hidden" name="page" value="doacoes">
                             <input type="hidden" name="crud" value="d">
-                            <input type="hidden" name="id" value="<?= $doacoes['id_doacao'] ?>"> 
-                            <input type="submit" value="Excluir">
+                            <input type="hidden" name="id" value="<?= htmlspecialchars($doacao['id_doacao']) ?>">
+                            <input type="submit" value="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta doação?');">
                         </form>
                     </td>
                 </tr>
@@ -69,4 +70,6 @@ if (!empty($_SESSION["doacoes"])):
 <?php else: ?>
     <p>Nenhuma doação encontrada para a busca.</p>
 <?php endif; ?>
-<?php endif; ?>
+<?php } else { ?>
+    <p>Nenhuma doação cadastrada ainda.</p>
+<?php } ?>

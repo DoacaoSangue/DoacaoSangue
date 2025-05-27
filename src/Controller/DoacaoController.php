@@ -1,7 +1,11 @@
 <?php
 
-require_once('../models/doacao.model.php');
-require_once('../models/restricao.model.php');
+namespace App\Controller;
+
+use App\Model\DoacaoModel;
+use App\Model\RestricaoModel;
+use App\Model\UsuarioModel;
+use App\Model\LocalModel;
 
 class DoacaoController
 {
@@ -26,26 +30,32 @@ class DoacaoController
 
         if (empty($idDoador) || empty($idRecebedor) || empty($idLocal) || empty($data)) {
             $_SESSION['erro_cadastro'] = 'Todos os campos são obrigatórios.';
-            self::redirectComAlerta('Todos os campos são obrigatórios.');
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=c');
+            exit;
         }
 
         if ($data <= date('Y-m-d')) {
             $_SESSION['erro_cadastro'] = 'A data da doação deve ser maior que a data atual.';
-            self::redirectComAlerta('A data da doação deve ser maior que a data atual.');
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=c');
+            exit;
         }
 
         if (RestricaoModel::verificarRestricao($idDoador, $idRecebedor)) {
             $_SESSION['erro_cadastro'] = 'Existe uma restrição entre o doador e o recebedor.';
-            self::redirectComAlerta('Não é possível cadastrar a doação: existe uma restrição entre o doador e o recebedor.');
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=c');
+            exit;
         }
 
         $resultado = DoacaoModel::cadastrarDoacao($idDoador, $idRecebedor, $idLocal, $data);
 
         if ($resultado === true) {
-            $_SESSION['cadastro_sucesso'] = true;
-            self::redirectComAlerta('Cadastro de doação efetuado com sucesso!');
+            $_SESSION['cadastro_sucesso'] = 'Cadastro de doação efetuado com sucesso!';
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=r');
+            exit;
         } else {
-            self::redirectComAlerta("Erro ao cadastrar doação: $resultado");
+            $_SESSION['erro_cadastro'] = "Erro ao cadastrar doação: $resultado";
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=c');
+            exit;
         }
     }
 
@@ -100,14 +110,23 @@ class DoacaoController
 
     public static function excluir()
     {
+        session_start();
+
         $id = $_GET['id'] ?? '';
 
         if ($id !== '') {
-            DoacaoModel::excluirDoacao($id);
-            self::redirectComAlerta('Doação excluída com sucesso!');
+            $resultado = DoacaoModel::excluirDoacao($id);
+            if ($resultado === true) {
+                $_SESSION['cadastro_sucesso'] = 'Doação excluída com sucesso!';
+            } else {
+                $_SESSION['erro_cadastro'] = 'Erro ao excluir doação!';
+            }
         } else {
-            self::redirectComAlerta('Erro ao excluir doação!');
+            $_SESSION['erro_cadastro'] = 'Erro ao excluir doação!';
         }
+
+        header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=r');
+        exit;
     }
 
     private static function redirectComAlerta(string $mensagem)
@@ -136,20 +155,5 @@ class DoacaoController
 
         header("Location: ../views/painel.view.php?page=doacoes");
         exit;
-    }
-
-    public function listarDoadores()
-    {
-        return $this->model->listarDoadores();
-    }
-
-    public function listarRecebedores()
-    {
-        return $this->model->listarRecebedores();
-    }
-
-    public function listarLocais()
-    {
-        return $this->localModel->buscarTodosLocais();
     }
 }

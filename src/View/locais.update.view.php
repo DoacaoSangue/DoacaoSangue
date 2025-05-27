@@ -1,26 +1,19 @@
-<?php
-require_once('../models/local.model.php');
-
-$id = $_GET['id'] ?? '';  
-$local = LocalModel::buscarLocalPorId($id); 
-?>
-
 <h2>Alterar local</h2>
-<form action="../controllers/locais.update.controller.php" method="POST">
-    <input type="hidden" name="id" value="<?= htmlspecialchars($id) ?>">
+<form action="/DoacaoSangue/atualizarLocal" method="POST">
+    <input type="hidden" name="id" value="<?= htmlspecialchars($local['id_local']) ?>">
     
     <div class="container">
         <label for="nome">Nome do Local</label>
-        <input type="text" name="nome" id="nome" value="<?= htmlspecialchars($local['nome']) ?>"> 
+        <input type="text" name="nome" id="nome" value="<?= htmlspecialchars($local['nome']) ?>" required>
         
         <label for="bairro">Bairro</label>
-        <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($local['bairro']) ?>">
+        <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($local['bairro']) ?>" required>
         
         <label for="rua">Rua</label>
-        <input type="text" name="rua" id="rua" value="<?= htmlspecialchars($local['rua']) ?>"> 
+        <input type="text" name="rua" id="rua" value="<?= htmlspecialchars($local['rua']) ?>" required>
         
         <label for="numero">Número</label>
-        <input type="number" name="numero" step="1" min="1" id="numero" value="<?= htmlspecialchars($local['numero']) ?>"> 
+        <input type="number" name="numero" step="1" min="1" id="numero" value="<?= htmlspecialchars($local['numero']) ?>" required>
     </div>
     
     <button type="submit">Salvar Alterações</button>

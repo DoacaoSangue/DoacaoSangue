@@ -10,7 +10,8 @@ class LocalController
     public function atualizar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirecionarComAlerta("Requisição inválida.");
+            header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
+            exit;
         }
 
         $id = $_POST['id'] ?? '';
@@ -20,18 +21,22 @@ class LocalController
         $numero = $_POST['numero'] ?? '';
 
         if (empty($id) || empty($nome) || empty($bairro) || empty($rua) || empty($numero)) {
-            return $this->redirecionarComAlerta("Todos os campos são obrigatórios.");
+            $_SESSION['erro'] = "Todos os campos são obrigatórios.";
+            header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=u&id=' . urlencode($id));
+            exit;
         }
 
         $resultado = LocalModel::atualizarLocal($id, $nome, $bairro, $rua, $numero);
 
         if ($resultado === true) {
-            session_start();
             $_SESSION['cadastro_sucesso'] = true;
-            return $this->redirecionarComAlerta("Atualização de local efetuada com sucesso!");
+            header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
+            exit;
         }
 
-        return $this->redirecionarComAlerta("Erro ao atualizar local: $resultado");
+        $_SESSION['erro'] = "Erro ao atualizar local: $resultado";
+        header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=u&id=' . urlencode($id));
+        exit;
     }
 
     public function cadastrar()
@@ -88,19 +93,20 @@ class LocalController
         $id = $_GET['id'] ?? '';
 
         if (empty($id)) {
-            return $this->redirecionarComAlerta("Erro ao excluir local!");
+            $_SESSION['erro'] = "Erro ao excluir local!";
+            header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
+            exit;
         }
 
-        LocalModel::excluirLocal($id);
-        return $this->redirecionarComAlerta("Local excluído com sucesso!");
-    }
+        $resultado = LocalModel::excluirLocal($id);
 
-    private function redirecionarComAlerta($mensagem)
-    {
-        echo "<script>
-                alert('$mensagem');
-                window.location.href = '../views/painel-administrador.view.php?page=locais&crud=';
-              </script>";
+        if ($resultado === true) {
+            $_SESSION['cadastro_sucesso'] = "Local excluído com sucesso!";
+        } else {
+            $_SESSION['erro'] = "Erro ao excluir local!";
+        }
+
+        header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
         exit;
     }
 }

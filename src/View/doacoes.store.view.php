@@ -1,35 +1,24 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-require_once '../controllers/campos-doacao.controller.php';
-
-$controller = new CamposDoacaoController();
-$doadores = $controller->listarDoadores();
-$recebedores = $controller->listarRecebedores();
-$locais = $controller->listarLocais();
-?>
 <h2>Cadastrar Doação</h2>
-<form action="../controllers/doacoes.store.controller.php" method="POST">
+<form action="/DoacaoSangue/cadastrarDoacao" method="POST">
     <div class="container">
         <label for="id_doador">Doador:</label>
-        <select name="id_doador" id="id_doador">
+        <select name="id_doador" id="id_doador" required>
             <?php foreach ($doadores as $doador): ?>
                 <option value="<?= htmlspecialchars($doador['id_usuario']) ?>">
-                    <?= htmlspecialchars($doador['nome']) . "      " .  htmlspecialchars($doador['tipo_sanguineo']) ?>
+                    <?= htmlspecialchars($doador['nome']) . " - " .  htmlspecialchars($doador['tipo_sanguineo']) ?>
                 </option>
             <?php endforeach; ?>
         </select>
         <label for="id_recebedor">Recebedor:</label>
-        <select name="id_recebedor" id="id_recebedor">
+        <select name="id_recebedor" id="id_recebedor" required>
             <?php foreach ($recebedores as $recebedor): ?>
                 <option value="<?= htmlspecialchars($recebedor['id_usuario']) ?>">
-                    <?= htmlspecialchars($recebedor['nome']) . "      " .  htmlspecialchars($recebedor['tipo_sanguineo']) ?>
+                    <?= htmlspecialchars($recebedor['nome']) . " - " .  htmlspecialchars($recebedor['tipo_sanguineo']) ?>
                 </option>
             <?php endforeach; ?>
         </select>
         <label for="id_local">Local:</label>
-        <select name="id_local" id="id_local">
+        <select name="id_local" id="id_local" required>
             <?php foreach ($locais as $local): ?>
                 <option value="<?= htmlspecialchars($local['id_local']) ?>">
                     <?= htmlspecialchars($local['nome']) ?>
@@ -39,7 +28,7 @@ $locais = $controller->listarLocais();
         <label for="data">
             Data da Doação
         </label>
-        <input type="date" name="data" id="data">
+        <input type="date" name="data" id="data" required>
     </div>
     <button type="submit">Salvar</button>
 </form>
@@ -51,7 +40,7 @@ $locais = $controller->listarLocais();
         width: 60%;
     }
 
-    .container>input {
+    .container>input, .container>select {
         margin-bottom: 1rem;
     }
 

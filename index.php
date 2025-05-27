@@ -49,6 +49,30 @@ $router->map('POST', '/novoLocal', function() {
     (new LocalController())->cadastrar();
 });
 
+$router->map('POST', '/atualizarLocal', function() {
+    (new \App\Controller\LocalController())->atualizar();
+});
+
+$router->map('GET', '/excluirLocal', function() {
+    (new \App\Controller\LocalController())->excluir();
+});
+
+$router->map('POST', '/cadastrarDoacao', function() {
+    (new \App\Controller\DoacaoController())->cadastrar();
+});
+
+$router->map('POST', '/atualizarDoacao', function() {
+    (new \App\Controller\DoacaoController())->atualizar();
+});
+
+$router->map('POST', '/excluirDoacao', function() {
+    (new \App\Controller\DoacaoController())->excluir();
+});
+
+$router->map('GET', '/excluirDoacao', function() {
+    (new \App\Controller\DoacaoController())->excluir();
+});
+
 $match = $router->match();
 
 if ($match && is_callable($match['target'])) {
