@@ -22,7 +22,6 @@
         <ul>
             <li><a href="/DoacaoSangue/painel-administrador?page=locais">Locais</a></li>
             <li><a href="/DoacaoSangue/painel-administrador?page=doacoes">Doações</a></li>
-            <li><a href="/DoacaoSangue/painel-administrador?page=usuarios">Usuários</a></li>
         </ul>
         <ul class="sair">
             <li><a href="/DoacaoSangue/?acao=sair">Sair</a></li>

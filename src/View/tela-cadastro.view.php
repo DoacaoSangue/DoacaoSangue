@@ -38,7 +38,7 @@ $tipos = $controller->listarTipos();
 <div class="form-card">
     <h2>Cadastro de Novo Usuário</h2>
 
-    <form action="/DoacaoSangue/cadastro" method="POST">
+    <form action="/DoacaoSangue/cadastrar" method="POST">
 
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" required>

@@ -4,6 +4,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use App\Controller\TelaInicialController;
 use App\Controller\PainelAdministradorController;
 use App\Controller\SolicitarDoacaoController;
+use App\Controller\TelaCadastroController;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -21,6 +22,10 @@ $router->map('GET', '/cadastro', function() {
 
 $router->map('POST', '/login', function() {
     (new TelaInicialController())->handleRequest('login');
+});
+
+$router->map('POST', '/cadastrar', function() {
+    (new TelaCadastroController())->criar();
 });
 
 $router->map('GET', '/painel-administrador', function() {

@@ -2,18 +2,18 @@
 
 namespace App\Controller;
 
-use App\Model\Usuario;
+use App\Model\UsuarioModel;
 use App\Database\Connection;
 use PDO;
 
-class UsuarioController
+class TelaCadastroController
 {
     public function listar()
     {
         $busca = $_GET['busca'] ?? '';
         $usuarios = $busca
-            ? Usuario::buscarPorNome(trim($busca))
-            : Usuario::listarTodos();
+            ? UsuarioModel::buscarPorNome(trim($busca))
+            : UsuarioModel::listarTodos();
 
         require_once __DIR__ . '/../View/usuarios.lista.view.php';
     }
@@ -22,22 +22,57 @@ class UsuarioController
     {
         $erros = [];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nome = trim($_POST['nome']);
-            $email = trim($_POST['email']);
-            $senha = trim($_POST['senha']);
+            $nome      = trim($_POST['nome']);
+            $email     = trim($_POST['email']);
+            $senha     = trim($_POST['pass']);
+            $telefone  = trim($_POST['telefone']);
+            $estado    = trim($_POST['estado']);
+            $cidade    = trim($_POST['cidade']);
+            $bairro    = trim($_POST['bairro']);
+            $rua       = trim($_POST['rua']);
+            $numero    = trim($_POST['numero']);
+            $complemento = trim($_POST['complemento']);
+            $tipo      = intval($_POST['id_tipo_sanguineo']);
+            $alergias  = trim($_POST['alergias']);
 
+            // Monta o endereço completo
+            $endereco = "{$estado}, {$cidade}, {$bairro}, {$rua}, {$numero}";
+            if (!empty($complemento)) {
+                $endereco .= " - {$complemento}";
+            }
+
+            // Validação básica
             if (!$nome) $erros[] = 'Nome é obrigatório.';
             if (!$email) $erros[] = 'Email é obrigatório.';
             if (!$senha) $erros[] = 'Senha é obrigatória.';
+            if (!$telefone) $erros[] = 'Telefone é obrigatório.';
+            if (!$estado || !$cidade || !$bairro || !$rua || !$numero) $erros[] = 'Endereço completo é obrigatório.';
+            if (!$tipo) $erros[] = 'Tipo sanguíneo é obrigatório.';
 
             if (empty($erros)) {
-                Usuario::criar($nome, $email, $senha);
-                header('Location: /usuarios');
-                exit;
+                $resultado = \App\Model\UsuarioModel::cadastrarUsuario(
+                    $nome,
+                    $email,
+                    $senha,
+                    $telefone,
+                    $endereco,
+                    $tipo,
+                    $alergias
+                );
+
+                if ($resultado === true) {
+                    // Cadastro OK, redireciona para login
+                    header('Location: /DoacaoSangue/');
+                    exit;
+                } else {
+                    // Mensagem de erro do model
+                    $erros[] = $resultado;
+                }
             }
         }
 
-        require_once __DIR__ . '/../View/usuarios.store.view.php';
+        // Exibe a view de cadastro novamente, passando erros se houver
+        require __DIR__ . '/../View/tela-cadastro.view.php';
     }
 
     public function editar($id)
