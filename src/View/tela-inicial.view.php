@@ -15,7 +15,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <div class="form-card">
     <h2>Login</h2>
 
-    <form method="POST" action="index.php">
+    <form method="POST" action="/DoacaoSangue/login">
         <label>Usuário (Email)</label>
         <input type="text" name="email" id="user">
 

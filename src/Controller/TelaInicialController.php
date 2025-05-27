@@ -46,31 +46,27 @@ class TelaInicialController
         $email = $_POST['email'] ?? '';
         $senha = $_POST['pass'] ?? '';
 
-        $usuarioEmail = UsuarioModel::validarLogin($email, $senha);
+        $usuarioEmail = \App\Model\UsuarioModel::validarLogin($email, $senha);
 
         if ($usuarioEmail) {
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
 
-            $conn = UsuarioModel::conectar();
+            // Buscar id_usuario e tipo_usuario usando PDO
+            $conn = \App\Database\Connection::getInstance();
             $stmt = $conn->prepare("SELECT id_usuario, tipo_usuario FROM usuarios WHERE email = ?");
-            $stmt->bind_param("s", $email);
-            $stmt->execute();
-
-            $stmt->bind_result($idUsuario, $tipoUsuario);
-            $stmt->fetch();
-            $stmt->close();
-            $conn->close();
+            $stmt->execute([$email]);
+            $usuario = $stmt->fetch(\PDO::FETCH_ASSOC);
 
             $_SESSION['usuario_email'] = $email;
-            $_SESSION['tipo_usuario'] = $tipoUsuario;
-            $_SESSION['id_usuario'] = $idUsuario;
+            $_SESSION['tipo_usuario'] = $usuario['tipo_usuario'];
+            $_SESSION['id_usuario'] = $usuario['id_usuario'];
 
-            if ($tipoUsuario == 1) {
-                header('Location: /painel-administrador');
+            if ($usuario['tipo_usuario'] == 1) {
+                header('Location: /DoacaoSangue/painel-administrador');
             } else {
-                header('Location: /painel');
+                header('Location: /DoacaoSangue/painel');
             }
             exit;
         }
