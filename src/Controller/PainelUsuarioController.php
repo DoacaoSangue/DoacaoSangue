@@ -12,6 +12,8 @@ class PainelUsuarioController
             exit;
         }
 
+        \App\Controller\SolicitarDoacaoController::verificarStatus();
+
         $page = $_GET['page'] ?? 'carregar-home';
         $view = null;
 

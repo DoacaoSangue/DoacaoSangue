@@ -84,50 +84,6 @@ class DoacaoController
         }
     }
 
-    public static function atualizarStatus()
-    {
-        session_start();
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo "Método inválido.";
-            return;
-        }
-
-        $idUsuario = $_SESSION['id_usuario'] ?? null;
-        $acao = $_POST['acao'] ?? null;
-
-        if (!$idUsuario || !$acao) {
-            echo "Dados inválidos.";
-            return;
-        }
-
-        if ($acao === 'doar') {
-            UsuarioModel::atualizarStatusDoacao($idUsuario, 'doar');
-        } elseif ($acao === 'receber') {
-            UsuarioModel::atualizarStatusDoacao($idUsuario, 'receber');
-        }
-
-        echo "<script>alert('Solicitação enviada com sucesso!');
-            window.location.href = '../views/painel.view.php?page=carregar-home';</script>";
-    }
-
-    public static function verificarStatus()
-    {
-        session_start();
-
-        $id_usuario = $_SESSION["id_usuario"] ?? null;
-        if (!$id_usuario) {
-            echo "Usuário não identificado.";
-            exit;
-        }
-
-        $doacao = UsuarioModel::buscarStatusDoacao($id_usuario);
-        $_SESSION['doacao'] = $doacao["doar"] || $doacao["receber"];
-
-        header("Location: ../views/painel.view.php?page=home");
-        exit;
-    }
-
     public static function listar()
     {
         session_start();

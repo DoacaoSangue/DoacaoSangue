@@ -3,6 +3,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Controller\TelaInicialController;
 use App\Controller\PainelAdministradorController;
+use App\Controller\SolicitarDoacaoController;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -28,6 +29,14 @@ $router->map('GET', '/painel-administrador', function() {
 
 $router->map('GET', '/painel', function() {
     (new \App\Controller\PainelUsuarioController())->handleRequest();
+});
+
+$router->map('POST', '/doar', function() {
+    \App\Controller\SolicitarDoacaoController::atualizarStatus();
+});
+
+$router->map('GET', '/verificar-status', function() {
+    \App\Controller\SolicitarDoacaoController::verificarStatus();
 });
 
 $match = $router->match();
