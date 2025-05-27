@@ -1,8 +1,4 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-?>
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -14,7 +10,24 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <div class="form-card">
     <h2>Login</h2>
+    <?php
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
+        if (isset($_SESSION['cadastro_sucesso'])): ?>
+            <div style="color: green; margin-bottom: 1rem;">
+                <?= htmlspecialchars($_SESSION['cadastro_sucesso']) ?>
+            </div>
+            <?php unset($_SESSION['cadastro_sucesso']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['erro_login'])): ?>
+            <div style="color: red;">
+                <?= htmlspecialchars($_SESSION['erro_login']) ?>
+            </div>
+            <?php unset($_SESSION['erro_login']); ?>
+        <?php endif; ?>
     <form method="POST" action="/DoacaoSangue/login">
         <label>Usuário (Email)</label>
         <input type="text" name="email" id="user">

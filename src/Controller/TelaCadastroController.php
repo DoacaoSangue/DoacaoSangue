@@ -61,13 +61,15 @@ class TelaCadastroController
                 );
 
                 if ($resultado === true) {
-                    // Cadastro OK, redireciona para login
-                    header('Location: /DoacaoSangue/');
-                    exit;
-                } else {
-                    // Mensagem de erro do model
-                    $erros[] = $resultado;
+                if (session_status() !== PHP_SESSION_ACTIVE) {
+                    session_start();
                 }
+                $_SESSION['cadastro_sucesso'] = 'Cadastro realizado com sucesso! Faça login para continuar.';
+                header('Location: /DoacaoSangue/');
+                exit;
+            } else {
+                $erros[] = $resultado;
+            }
             }
         }
 
