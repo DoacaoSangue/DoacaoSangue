@@ -94,7 +94,7 @@ class DoacaoController
             DoacaoModel::buscarTodasDoacoes();
 
         $_SESSION['doacoes'] = $doacoes ?: [];
-        header("Location: ../views/painel-administrador.view.php?page=doacoes&crud=r");
+        header("Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=r");
         exit;
     }
 
@@ -113,9 +113,9 @@ class DoacaoController
     private static function redirectComAlerta(string $mensagem)
     {
         echo "<script>
-                alert('$mensagem');
-                window.location.href = '../views/painel-administrador.view.php?page=doacoes&crud=';
-              </script>";
+        alert('$mensagem');
+        window.location.href = '/DoacaoSangue/painel-administrador?page=doacoes&crud=r';
+      </script>";
         exit;
     }
 

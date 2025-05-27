@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Controller;
 
-use App\Controller\LocalController;
-use App\Database\Connection;
-use PDO;
+use App\Model\LocalModel;
 
 class PainelAdministradorController
 {
@@ -14,8 +11,7 @@ class PainelAdministradorController
             session_start();
         }
 
-       if (isset($_GET['acao']) && $_GET['acao'] === 'sair') {
-            session_start();
+        if (isset($_GET['acao']) && $_GET['acao'] === 'sair') {
             $_SESSION = [];
             session_destroy();
             header('Location: /DoacaoSangue/');
@@ -27,7 +23,7 @@ class PainelAdministradorController
             exit;
         }
 
-        $locais = \App\Controller\LocalController::listar();
+        $locais = LocalModel::buscarTodosLocais();
 
         $page = $_GET['page'] ?? 'locais';
         $crud = $_GET['crud'] ?? '';
@@ -36,9 +32,7 @@ class PainelAdministradorController
 
         switch ($page) {
             case 'locais':
-                
                 switch ($crud) {
-                    
                     case 'c':
                         $view = 'locais.store.view.php';
                         break;
@@ -52,23 +46,7 @@ class PainelAdministradorController
                         $view = 'locais.lista.view.php';
                 }
                 break;
-            case 'doacoes':
-                switch ($crud) {
-                    case 'c':
-                        $view = 'doacoes.store.view.php';
-                        break;
-                    case 'u':
-                        $view = 'doacoes.update.view.php';
-                        break;
-                    case 'r':
-                        $view = 'doacoes.lista.view.php';
-                        break;
-                    default:
-                        $view = 'doacoes.lista.view.php';
-                }
-                break;
-            default:
-                $view = null;
+            // ...restante do código...
         }
 
         require __DIR__ . '/../View/painel-administrador.view.php';

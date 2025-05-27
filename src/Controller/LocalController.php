@@ -37,7 +37,8 @@ class LocalController
     public function cadastrar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return $this->redirecionarComAlerta("Requisição inválida.");
+            header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
+            exit;
         }
 
         $nome = $_POST['nome'] ?? '';
@@ -46,21 +47,25 @@ class LocalController
         $numero = $_POST['numero'] ?? '';
 
         if (empty($nome) || empty($bairro) || empty($rua) || empty($numero)) {
-            return $this->redirecionarComAlerta("Todos os campos são obrigatórios.");
+            $_SESSION['erro'] = "Todos os campos são obrigatórios.";
+            header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=c');
+            exit;
         }
 
         $resultado = LocalModel::cadastrarLocal($nome, $bairro, $rua, $numero);
 
         if ($resultado === true) {
-            session_start();
             $_SESSION['cadastro_sucesso'] = true;
-            return $this->redirecionarComAlerta("Cadastro de local efetuado com sucesso!");
+            header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
+            exit;
         }
 
-        return $this->redirecionarComAlerta("Erro ao cadastrar local: $resultado");
+        $_SESSION['erro'] = "Erro ao cadastrar local: $resultado";
+        header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=c');
+        exit;
     }
 
-    public static function listar()
+    public function listar()
     {
         session_start();
 
@@ -74,7 +79,7 @@ class LocalController
 
         $_SESSION['locais'] = $locais !== false ? $locais : [];
 
-        header("Location: ../views/painel-administrador.view.php?page=locais&crud=r");
+        header("Location: /DoacaoSangue/painel-administrador.view.php?page=locais&crud=r");
         exit;
     }
 
