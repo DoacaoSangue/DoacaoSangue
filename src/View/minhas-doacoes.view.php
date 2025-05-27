@@ -1,6 +1,18 @@
 <h3>Minhas Doações</h3>
 
-<?php if (isset($_SESSION["doacoes"]) && !empty($_SESSION["doacoes"])): ?>
+<?php
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+if (isset($_SESSION['erro']) || isset($_SESSION['erro_cadastro'])): ?>
+    <div style="color: red; margin-bottom: 1rem;">
+        <?= htmlspecialchars($_SESSION['erro'] ?? $_SESSION['erro_cadastro']) ?>
+    </div>
+    <?php unset($_SESSION['erro'], $_SESSION['erro_cadastro']); ?>
+<?php endif; ?>
+
+<?php if (isset($doacoes) && !empty($doacoes)): ?>
     <table width="100%">
         <thead>
             <tr>
@@ -13,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($_SESSION["doacoes"] as $index => $doacao): ?>
+            <?php foreach ($doacoes as $doacao): ?>
                 <tr>
                     <td><?= htmlspecialchars($doacao["nome_doador"]) ?></td>
                     <td><?= htmlspecialchars($doacao["tipo_sanguineo_doador"]) ?></td>

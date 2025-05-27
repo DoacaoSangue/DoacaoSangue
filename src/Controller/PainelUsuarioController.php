@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Model\DoacaoModel;
+use App\Controller\SolicitarDoacaoController;
+
 class PainelUsuarioController
 {
     public function handleRequest()
@@ -33,6 +36,11 @@ class PainelUsuarioController
                 $view = 'doar.view.php';
                 break;
             case 'carregar-doacoes':
+                $idUsuario = $_SESSION['id_usuario'] ?? null;
+                $doacoes = [];
+                if ($idUsuario) {
+                    $doacoes = \App\Model\DoacaoModel::buscarDoacoesPorUsuario($idUsuario);
+                }
                 $view = 'minhas-doacoes.view.php';
                 break;
             default:
