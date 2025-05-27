@@ -1,0 +1,10 @@
+{
+    "name": "gabrielneves/doacaosangue",
+    "description": "programa de doacao de sangue",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
