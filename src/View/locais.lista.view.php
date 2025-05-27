@@ -1,5 +1,23 @@
-
 <h3>Locais</h3>
+
+<?php
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+if (isset($_SESSION['cadastro_sucesso'])): ?>
+    <div style="color: green; margin-bottom: 1rem;">
+        <?= htmlspecialchars($_SESSION['cadastro_sucesso']) ?>
+    </div>
+    <?php unset($_SESSION['cadastro_sucesso']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['erro']) || isset($_SESSION['erro_cadastro'])): ?>
+    <div style="color: red; margin-bottom: 1rem;">
+        <?= htmlspecialchars($_SESSION['erro']?? $_SESSION['erro_cadastro']) ?>
+    </div>
+    <?php unset($_SESSION['erro'], $_SESSION['erro_cadastro']); ?>
+<?php endif; ?>
 
 <!-- Formulário de busca -->
 <form action="/DoacaoSangue/painel-administrador" method="GET" style="margin-bottom: 1rem;">

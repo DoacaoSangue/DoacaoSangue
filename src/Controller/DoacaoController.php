@@ -71,26 +71,32 @@ class DoacaoController
 
         if (empty($idDoador) || empty($idRecebedor) || empty($idLocal) || empty($data)) {
             $_SESSION['erro_cadastro'] = 'Todos os campos são obrigatórios.';
-            self::redirectComAlerta('Todos os campos são obrigatórios.');
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=u&id=' . urlencode($id));
+            exit;
         }
 
         if ($data <= date('Y-m-d')) {
             $_SESSION['erro_cadastro'] = 'A data da doação deve ser maior que a data atual.';
-            self::redirectComAlerta('A data da doação deve ser maior que a data atual.');
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=u&id=' . urlencode($id));
+            exit;
         }
 
         if (RestricaoModel::verificarRestricao($idDoador, $idRecebedor)) {
             $_SESSION['erro_cadastro'] = 'Existe uma restrição entre o doador e o recebedor.';
-            self::redirectComAlerta('Não é possível cadastrar a doação: existe uma restrição entre o doador e o recebedor.');
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=u&id=' . urlencode($id));
+            exit;
         }
 
         $resultado = DoacaoModel::atualizarDoacao($id, $idDoador, $idRecebedor, $idLocal, $data);
 
         if ($resultado === true) {
-            $_SESSION['cadastro_sucesso'] = true;
-            self::redirectComAlerta('Doação atualizada com sucesso!');
+            $_SESSION['cadastro_sucesso'] = 'Doação atualizada com sucesso!';
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=r');
+            exit;
         } else {
-            self::redirectComAlerta("Erro ao atualizar doação: $resultado");
+            $_SESSION['erro_cadastro'] = "Erro ao atualizar doação: $resultado";
+            header('Location: /DoacaoSangue/painel-administrador?page=doacoes&crud=u&id=' . urlencode($id));
+            exit;
         }
     }
 

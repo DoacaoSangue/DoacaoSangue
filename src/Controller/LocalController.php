@@ -9,6 +9,8 @@ class LocalController
 {
     public function atualizar()
     {
+        session_start();
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
             exit;
@@ -29,7 +31,7 @@ class LocalController
         $resultado = LocalModel::atualizarLocal($id, $nome, $bairro, $rua, $numero);
 
         if ($resultado === true) {
-            $_SESSION['cadastro_sucesso'] = true;
+            $_SESSION['cadastro_sucesso'] = "Local atualizado com sucesso!";
             header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
             exit;
         }
@@ -41,6 +43,8 @@ class LocalController
 
     public function cadastrar()
     {
+        session_start();
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
             exit;
@@ -60,7 +64,7 @@ class LocalController
         $resultado = LocalModel::cadastrarLocal($nome, $bairro, $rua, $numero);
 
         if ($resultado === true) {
-            $_SESSION['cadastro_sucesso'] = true;
+            $_SESSION['cadastro_sucesso'] = "Local cadastrado com sucesso!";
             header('Location: /DoacaoSangue/painel-administrador?page=locais&crud=r');
             exit;
         }
@@ -90,6 +94,8 @@ class LocalController
 
     public function excluir()
     {
+        session_start();
+
         $id = $_GET['id'] ?? '';
 
         if (empty($id)) {
