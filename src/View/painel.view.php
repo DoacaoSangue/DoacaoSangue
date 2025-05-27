@@ -63,7 +63,7 @@
             <li><a href="/DoacaoSangue/painel?page=carregar-doacoes">Minhas Doações</a></li>
         </ul>
         <ul class="sair">
-            <li><a href="/DoacaoSangue/?acao=sair">Sair</a></li>
+            <li><a href="/DoacaoSangue/painel?acao=sair">Sair</a></li>
         </ul>
     </header>
     <main>

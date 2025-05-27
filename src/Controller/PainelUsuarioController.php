@@ -6,7 +6,18 @@ class PainelUsuarioController
 {
     public function handleRequest()
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+       if (isset($_GET['acao']) && $_GET['acao'] === 'sair') {
+            session_start();
+            $_SESSION = [];
+            session_destroy();
+            header('Location: /DoacaoSangue/');
+            exit;
+        }
+
         if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 0) {
             header('Location: /DoacaoSangue/');
             exit;

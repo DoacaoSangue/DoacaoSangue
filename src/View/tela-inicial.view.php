@@ -27,7 +27,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
 
         <div class="form-cadastrar">
-            <button type="submit" name="acao" value="cadastrar" onclick="clearRequired()">Cadastrar</button>
+            <button type="button" onclick="window.location.href='/DoacaoSangue/cadastro'">Cadastrar</button>
         </div>
     </form>
 </div>
@@ -38,7 +38,7 @@ if (isset($_SESSION['erro_login']) && $_SESSION['erro_login']) {
     echo "<script>
         alert('Usuário ou senha incorretos.');
         setTimeout(function(){
-            window.location.href = 'index.php';
+            window.location.href = '/DoacaoSangue/';
         }, 100);
     </script>";
     unset($_SESSION['erro_login']);

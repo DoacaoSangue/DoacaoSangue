@@ -2,9 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once '../controllers/tipo-sanguineo.controller.php';
+require_once __DIR__ . '/../Controller/TipoSanguineoController.php';
 
-$controller = new TipoSanguineoController();
+$controller = new \App\Controller\TipoSanguineoController();
 $tipos = $controller->listarTipos();
 ?>
 <!doctype html>
@@ -38,7 +38,7 @@ $tipos = $controller->listarTipos();
 <div class="form-card">
     <h2>Cadastro de Novo Usuário</h2>
 
-    <form action="http://localhost/DoacaoSangue/controllers/tela-cadastro.controller.php" method="POST">
+    <form action="/DoacaoSangue/cadastro" method="POST">
 
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" required>

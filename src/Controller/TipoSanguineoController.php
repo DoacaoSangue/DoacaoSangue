@@ -1,5 +1,7 @@
 <?php
-require_once '../models/tipo.sanguineo.model.php';
+namespace App\Controller;
+
+use App\Model\TipoSanguineoModel;
 
 class TipoSanguineoController
 {
