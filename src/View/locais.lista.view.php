@@ -1,30 +1,34 @@
+
 <h3>Locais</h3>
 
-<form action="painel-administrador.view.php?page=locais&crud=r" method="GET">
-    <input type="text" name="buscar" >
+<!-- Formulário de busca -->
+<form action="/DoacaoSangue/painel-administrador" method="GET" style="margin-bottom: 1rem;">
+    <input type="hidden" name="page" value="locais">
+    <input type="hidden" name="crud" value="r">
+    <input type="text" name="buscar" placeholder="Buscar local..." value="<?= isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : '' ?>">
     <input type="submit" value="Buscar">
 </form>
 
-<form action="" method="GET">
+<!-- Botão para adicionar novo local -->
+<form action="/DoacaoSangue/painel-administrador" method="GET" style="margin-bottom: 2rem;">
     <input type="hidden" name="page" value="locais">
     <input type="hidden" name="crud" value="c">
     <input type="submit" value="Adicionar Local">
 </form>
 
 <?php
-if (!empty($_SESSION["locais"])): 
-    $buscar = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
+// $locais deve ser passado pelo controller
+$buscar = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 
-    if ($buscar) {
-        $locaisFiltrados = array_filter($_SESSION["locais"], function ($local) use ($buscar) {
-            return stripos($local["nome"], $buscar) !== false;
-        });
-    } else {
-        $locaisFiltrados = $_SESSION["locais"];
-    }
+if ($buscar) {
+    $locaisFiltrados = array_filter($locais, function ($local) use ($buscar) {
+        return stripos($local["nome"], $buscar) !== false;
+    });
+} else {
+    $locaisFiltrados = $locais;
+}
 ?>
 
-<!-- Exibindo os locais filtrados -->
 <?php if (!empty($locaisFiltrados)): ?>
     <table width="70%">
         <thead>
@@ -33,37 +37,36 @@ if (!empty($_SESSION["locais"])):
                 <th>Bairro</th>
                 <th>Rua</th>
                 <th>Número</th>
-                <th>Alterar/Excluir</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($locaisFiltrados as $index => $local): ?>
+            <?php foreach ($locaisFiltrados as $local): ?>
                 <tr>
                     <td><?= htmlspecialchars($local["nome"]) ?></td>
                     <td><?= htmlspecialchars($local["bairro"]) ?></td>
                     <td><?= htmlspecialchars($local["rua"]) ?></td>
                     <td><?= htmlspecialchars($local["numero"]) ?></td>
-                    <td>
-                        <form action="" method="GET">
+                    <td style="display: flex; gap: 0.5rem;">
+                        <form action="/DoacaoSangue/painel-administrador" method="GET" style="display:inline;">
                             <input type="hidden" name="page" value="locais">
                             <input type="hidden" name="crud" value="u">
-                            <input type="hidden" name="id" value="<?= $local['id_local'] ?>"> 
+                            <input type="hidden" name="id" value="<?= htmlspecialchars($local['id_local']) ?>">
                             <input type="submit" value="Alterar">
                         </form>
-                        <form action="" method="GET">
+                        <form action="/DoacaoSangue/painel-administrador" method="GET" style="display:inline;">
                             <input type="hidden" name="page" value="locais">
                             <input type="hidden" name="crud" value="d">
-                            <input type="hidden" name="id" value="<?= $local['id_local'] ?>"> 
-                            <input type="submit" value="Excluir">
+                            <input type="hidden" name="id" value="<?= htmlspecialchars($local['id_local']) ?>">
+                            <input type="submit" value="Excluir" onclick="return confirm('Tem certeza que deseja excluir este local?');">
                         </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-<?php else: ?>
+<?php elseif ($buscar): ?>
     <p>Nenhum local encontrado para a busca.</p>
-<?php endif; ?>
 <?php else: ?>
     <p>Nenhum local cadastrado ainda.</p>
 <?php endif; ?>

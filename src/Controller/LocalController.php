@@ -1,5 +1,9 @@
 <?php
-require_once('../models/local.model.php');
+namespace App\Controller;
+
+use App\Model\LocalModel;
+use App\Database\Connection;
+use PDO;
 
 class LocalController
 {
@@ -56,7 +60,7 @@ class LocalController
         return $this->redirecionarComAlerta("Erro ao cadastrar local: $resultado");
     }
 
-    public function listar()
+    public static function listar()
     {
         session_start();
 

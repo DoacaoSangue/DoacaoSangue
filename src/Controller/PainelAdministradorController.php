@@ -2,23 +2,43 @@
 
 namespace App\Controller;
 
+use App\Controller\LocalController;
+use App\Database\Connection;
+use PDO;
+
 class PainelAdministradorController
 {
     public function handleRequest()
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+       if (isset($_GET['acao']) && $_GET['acao'] === 'sair') {
+            session_start();
+            $_SESSION = [];
+            session_destroy();
+            header('Location: /DoacaoSangue/');
+            exit;
+        }
+
         if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 1) {
             header('Location: /DoacaoSangue/');
             exit;
         }
 
+        $locais = \App\Controller\LocalController::listar();
+
         $page = $_GET['page'] ?? 'locais';
         $crud = $_GET['crud'] ?? '';
 
         $view = '';
+
         switch ($page) {
             case 'locais':
+                
                 switch ($crud) {
+                    
                     case 'c':
                         $view = 'locais.store.view.php';
                         break;
@@ -30,18 +50,6 @@ class PainelAdministradorController
                         break;
                     default:
                         $view = 'locais.lista.view.php';
-                }
-                break;
-            case 'usuarios':
-                switch ($crud) {
-                    case 'c':
-                        $view = 'usuarios.store.view.php';
-                        break;
-                    case 'u':
-                        $view = 'usuarios.update.view.php';
-                        break;
-                    default:
-                        $view = 'usuarios.lista.view.php';
                 }
                 break;
             case 'doacoes':

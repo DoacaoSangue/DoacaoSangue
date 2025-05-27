@@ -5,6 +5,7 @@ use App\Controller\TelaInicialController;
 use App\Controller\PainelAdministradorController;
 use App\Controller\SolicitarDoacaoController;
 use App\Controller\TelaCadastroController;
+use App\Controller\LocalController;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -42,6 +43,10 @@ $router->map('POST', '/doar', function() {
 
 $router->map('GET', '/verificar-status', function() {
     \App\Controller\SolicitarDoacaoController::verificarStatus();
+});
+
+$router->map('POST', '/novoLocal', function() {
+    (new LocalController())->cadastrar();
 });
 
 $match = $router->match();
