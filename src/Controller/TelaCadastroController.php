@@ -1,16 +1,25 @@
 <?php
-require_once __DIR__ . '/../models/Usuario.php';
 
-class UsuarioController {
-    public static function listar() {
-        $usuarios = !empty($_GET['busca']) 
-            ? Usuario::buscarPorNome(trim($_GET['busca']))
+namespace App\Controller;
+
+use App\Model\Usuario;
+use App\Database\Connection;
+use PDO;
+
+class UsuarioController
+{
+    public function listar()
+    {
+        $busca = $_GET['busca'] ?? '';
+        $usuarios = $busca
+            ? Usuario::buscarPorNome(trim($busca))
             : Usuario::listarTodos();
 
-        require_once __DIR__ . '/../views/usuarios.lista.view.php';
+        require_once __DIR__ . '/../View/usuarios.lista.view.php';
     }
 
-    public static function criar() {
+    public function criar()
+    {
         $erros = [];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nome = trim($_POST['nome']);
@@ -23,18 +32,17 @@ class UsuarioController {
 
             if (empty($erros)) {
                 Usuario::criar($nome, $email, $senha);
-                header('Location: painel-administrador.view.php?page=usuarios');
+                header('Location: /usuarios');
                 exit;
             }
         }
 
-        require_once __DIR__ . '/../views/usuarios.store.view.php';
+        require_once __DIR__ . '/../View/usuarios.store.view.php';
     }
 
-    public static function editar($id) {
-        require_once __DIR__ . '/../db/conexao.php';
-        $conn = getConexao(); // Ajuste se necessário
-
+    public function editar($id)
+    {
+        $conn = Connection::getInstance();
         $stmt = $conn->prepare("SELECT * FROM usuarios WHERE id = ?");
         $stmt->execute([$id]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -46,21 +54,20 @@ class UsuarioController {
             $update = $conn->prepare("UPDATE usuarios SET nome = ?, email = ? WHERE id = ?");
             $update->execute([$nome, $email, $id]);
 
-            header("Location: ../views/usuarios.lista.view.php");
+            header("Location: /usuarios");
             exit();
         }
 
-        require_once '../views/usuarios.update.view.php';
+        require_once __DIR__ . '/../View/usuarios.update.view.php';
     }
 
-    public static function excluir($id) {
-        require_once __DIR__ . '/../db/conexao.php';
-        $conn = getConexao(); // Ajuste se necessário
-
+    public function excluir($id)
+    {
+        $conn = Connection::getInstance();
         $stmt = $conn->prepare("DELETE FROM usuarios WHERE id = ?");
         $stmt->execute([$id]);
 
-        header("Location: ../views/usuarios.lista.view.php");
+        header("Location: /usuarios");
         exit();
     }
 }

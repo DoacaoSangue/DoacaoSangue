@@ -6,8 +6,6 @@ use PDOException;
 
 class Connection {
     public static function getInstance(): PDO {
-        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
-        $dotenv->load();
         $host = $_ENV['DB_HOST'];
         $db = $_ENV['DB_NAME'];
         $user = $_ENV['DB_USER'];

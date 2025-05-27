@@ -1,45 +1,44 @@
 <?php
 
-require_once('models/usuario.model.php');
+namespace App\Controller;
+
+use App\Model\UsuarioModel;
 
 class TelaInicialController
 {
-    public function handleRequest()
+    public function handleRequest($acao = null)
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
+        // Logout
         if (isset($_GET['acao']) && $_GET['acao'] === 'sair') {
             session_destroy();
-            header('Location: index.php');
+            header('Location: /');
             exit();
         }
 
-        $page = $_GET['page'] ?? null;
-        if ($page === 'cadastro') {
-            require_once(__DIR__ . '/../views/tela-cadastro.view.php');
+        // Cadastro via rota
+        if ($acao === 'cadastro' || ($_GET['page'] ?? null) === 'cadastro') {
+            require_once(__DIR__ . '/../View/tela-cadastro.view.php');
             return;
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $acao = $_POST['acao'] ?? '';
-
-            switch ($acao) {
-                case 'acessar':
-                    $this->acessar();
-                    break;
-
-                case 'cadastrar':
-                    $this->cadastrar();
-                    break;
-
-                default:
-                    break;
-            }
-        } else {
-            require_once(__DIR__ . '/../views/tela-inicial.view.php');
+        // Login via rota
+        if ($acao === 'login' || ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'acessar')) {
+            $this->acessar();
+            return;
         }
+
+        // Cadastro via POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'cadastrar') {
+            $this->cadastrar();
+            return;
+        }
+
+        // Página inicial
+        require_once(__DIR__ . '/../View/tela-inicial.view.php');
     }
 
     private function acessar()
@@ -69,25 +68,21 @@ class TelaInicialController
             $_SESSION['id_usuario'] = $idUsuario;
 
             if ($tipoUsuario == 1) {
-                header('Location: views/painel-administrador.view.php');
+                header('Location: /painel-administrador');
             } else {
-                header('Location: views/painel.view.php');
+                header('Location: /painel');
             }
             exit;
         }
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         $_SESSION['erro_login'] = true;
-        header('Location: index.php');
+        header('Location: /');
         exit;
     }
 
     private function cadastrar()
     {
-        header('Location: views/tela-cadastro.view.php');
+        header('Location: /cadastro');
         exit;
     }
 }
