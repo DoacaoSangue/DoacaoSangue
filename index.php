@@ -26,6 +26,10 @@ $router->map('GET', '/painel-administrador', function() {
     (new PainelAdministradorController())->handleRequest();
 });
 
+$router->map('GET', '/painel', function() {
+    (new \App\Controller\PainelUsuarioController())->handleRequest();
+});
+
 $match = $router->match();
 
 if ($match && is_callable($match['target'])) {

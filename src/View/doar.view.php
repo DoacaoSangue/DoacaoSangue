@@ -1,7 +1,7 @@
 <main>
-    <?php if (!$_SESSION["doacao"]): ?>
+    <?php if (!isset($_SESSION["doacao"]) || !$_SESSION["doacao"]): ?>
         <h2>Você deseja:</h2>
-        <form action="../controllers/doar.controller.php" method="POST">
+        <form action="/DoacaoSangue/doar" method="POST">
             <button type="submit" name="acao" value="doar">
                 Doar Sangue
             </button>

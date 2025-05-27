@@ -1,24 +1,12 @@
 <?php
-session_start();
-
-// Proteção de login
-if (!isset($_SESSION['usuario_email']) || $_SESSION['tipo_usuario'] != 0) {
-    header('Location: ../index.php');
-    exit;
-}
-
-// Verifica qual página o usuário quer
-$page = $_GET['page'] ?? 'carregar-home'; // Se não passar nada, vai pra 'home' por padrão
+// Recebe $view do controller
 ?>
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
     <title>Painel</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 
     <style>
         header {
@@ -68,37 +56,24 @@ $page = $_GET['page'] ?? 'carregar-home'; // Se não passar nada, vai pra 'home'
     </style>
 </head>
 
-<body style="padding:0;">
+<body style="padding: 0">
     <header>
         <ul>
-            <li><a href="?page=carregar-home">Página Inicial</a></li>
-            <li><a href="?page=carregar-doacoes">Minhas Doações</a></li>
+            <li><a href="/DoacaoSangue/painel?page=carregar-home">Página Inicial</a></li>
+            <li><a href="/DoacaoSangue/painel?page=carregar-doacoes">Minhas Doações</a></li>
         </ul>
         <ul class="sair">
-            <li><a href="../index.php?acao=sair">Sair</a></li>
+            <li><a href="/DoacaoSangue/?acao=sair">Sair</a></li>
         </ul>
     </header>
-
     <main>
         <?php
-        // Aqui ele inclui dinamicamente o conteúdo!
-        switch ($page) {
-            case 'carregar-home':
-                require('../controllers/carregar-doar.controller.php');
-                break;
-            case 'home':
-                require('doar.view.php');
-                break;
-            case 'carregar-doacoes':
-                require('../controllers/minhas-doacoes.controller.php');
-            case 'doacoes':
-                require('minhas-doacoes.view.php');
-                break;
-            default:
-                echo "<p>Página não encontrada.</p>";
+        if ($view && file_exists(__DIR__ . '/' . $view)) {
+            require __DIR__ . '/' . $view;
+        } else {
+            echo "<p>Página não encontrada.</p>";
         }
         ?>
     </main>
 </body>
-
 </html>
