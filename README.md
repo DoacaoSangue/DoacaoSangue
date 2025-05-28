@@ -1,3 +1,5 @@
+Integrantes: Gabriel Pereira Neves, Johan Fillipe Costa Debtil, Maria Clara Thomaz Carneiro
+
 Primeiramente a pasta do projeto (DoacaoSangue) deve estar dentro dentro do diretório onde o XAMPP está instalado, e dentro da pasta htdocs.
 Por exemplo: "C:\xampp\htdocs\DoacaoSangue" para o meu projeto.
 Logo após executar o XAMPP e iniciar tanto o MySQL quanto o Apache, acessar o projeto por meio do navegador com o seguinte endereço: "localhost/DoacaoSangue/".
