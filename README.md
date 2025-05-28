@@ -6,6 +6,8 @@ Logo após executar o XAMPP e iniciar tanto o MySQL quanto o Apache, acessar o p
 (O banco de dados precisa primeiramente ser criado como "doacao_sangue" no phpmyadmin e então ser importado da pasta "data" do projeto).
 Todos os usuários são cadastrados por padrão como usuários comuns, para criar o primeiro administrador, caso o banco de dados esteja vazio, deve-se preencher a tela de cadastro e modificar no banco de dados o valor do campo "tipo_usuario" de 0 para 1.
 
+Para o projeto funcionar, o composer deve estar instalado. Para instalar as dependências, rodar o comando composer install na pasta do projeto
+
 As funcionalidades do aplicativo são:
 
 Tela com opção de acesso ou cadastro de usuário.
