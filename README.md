@@ -1,6 +1,6 @@
 Primeiramente a pasta do projeto (DoacaoSangue) deve estar dentro dentro do diretório onde o XAMPP está instalado, e dentro da pasta htdocs.
 Por exemplo: "C:\xampp\htdocs\DoacaoSangue" para o meu projeto.
-Logo após executar o XAMPP e iniciar tanto o MySQL quanto o Apache, acessar o projeto por meio do navegador com o seguinte endereço: "localhost/DoacaoSangue/index.php".
+Logo após executar o XAMPP e iniciar tanto o MySQL quanto o Apache, acessar o projeto por meio do navegador com o seguinte endereço: "localhost/DoacaoSangue/".
 (O banco de dados precisa primeiramente ser criado como "doacao_sangue" no phpmyadmin e então ser importado da pasta "data" do projeto).
 Todos os usuários são cadastrados por padrão como usuários comuns, para criar o primeiro administrador, caso o banco de dados esteja vazio, deve-se preencher a tela de cadastro e modificar no banco de dados o valor do campo "tipo_usuario" de 0 para 1.
 
