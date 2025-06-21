@@ -1,61 +1,151 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🩸 API RESTful - Sistema de Doação de Sangue
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto consiste no desenvolvimento de uma **API RESTful** utilizando **Laravel** com autenticação via **Laravel Sanctum**, seguindo os princípios da arquitetura **MVC**. Todas as respostas são retornadas no formato **JSON**.
 
-## About Laravel
+A API permite o gerenciamento de **usuários**, **locais de doação**, **doações realizadas** e **tipos sanguíneos**, com controle de acesso diferenciado entre **usuário comum** e **administrador**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📚 Tecnologias Utilizadas
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP 8.2
+- Laravel 12.x
+- MySQL
+- Laravel Sanctum (Autenticação por token)
+- Composer
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ⚙️ Instalação e Configuração
 
-## Learning Laravel
+### 1. Clonar o projeto:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```bash
+git clone https://github.com/DoacaoSangue/DoacaoSangue
+cd api
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 2. Instalar as dependências PHP:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+composer install
+```
 
-## Laravel Sponsors
+### 3. Configurar o arquivo `.env`:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+cp .env.example .env
+```
 
-### Premium Partners
+Configure as variáveis de conexão com o banco de dados MySQL:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=doacao_sangue
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Contributing
+### 4. Executar as migrations:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan migrate
+```
 
-## Code of Conduct
+### 5. Popular dados iniciais:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan db:seed
+```
 
-## Security Vulnerabilities
+### 6. Instalar o Sanctum:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+composer require laravel/sanctum
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+php artisan migrate
+```
 
-## License
+### 7. Iniciar o servidor local:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan serve
+```
+
+## 🔐 Autenticação e Controle de Acesso
+
+A API utiliza **Laravel Sanctum** para autenticação via **Token Bearer**.
+
+Após o login, o usuário recebe um token que deve ser enviado no header das requisições:
+
+```
+Authorization: Bearer SEU_TOKEN_AQUI
+```
+
+## 📑 Permissões de Acesso por Perfil
+
+### Endpoints Públicos (Sem autenticação):
+
+| Método | Endpoint | Função |
+|---|---|---|
+| POST | `/api/register` | Cadastro de novo usuário |
+| POST | `/api/login` | Login |
+
+### Endpoints para Usuário Autenticado (Tipo Comum):
+
+*(Somente após login, com token válido)*
+
+| Método | Endpoint | Função |
+|---|---|---|
+| POST | `/api/logout` | Logout |
+| GET | `/api/tipos-sanguineos` | Listar todos os tipos sanguíneos |
+| GET | `/api/locais` | Listar todos os locais de doação |
+| GET | `/api/locais/{id}` | Ver detalhes de um local |
+| GET | `/api/doacoes` | Listar apenas as doações em que o usuário é **doador ou recebedor** |
+| GET | `/api/doacoes/{id}` | Ver detalhes de uma doação **se o usuário for doador ou recebedor** |
+| GET | `/api/usuarios/{id}` | Ver os próprios dados **(o usuário só pode consultar o próprio ID)** |
+
+### Endpoints Exclusivos para Administrador:
+
+*(Requer usuário com `tipo_usuario = 1`)*
+
+| Método | Endpoint | Função |
+|---|---|---|
+| GET | `/api/usuarios` | Listar todos os usuários |
+| POST | `/api/usuarios` | Criar usuário |
+| PUT | `/api/usuarios/{id}` | Atualizar qualquer usuário |
+| DELETE | `/api/usuarios/{id}` | Excluir qualquer usuário |
+| POST | `/api/locais` | Criar local |
+| PUT | `/api/locais/{id}` | Atualizar local |
+| DELETE | `/api/locais/{id}` | Excluir local |
+| POST | `/api/doacoes` | Criar nova doação |
+| PUT | `/api/doacoes/{id}` | Atualizar doação |
+| DELETE | `/api/doacoes/{id}` | Excluir doação |
+| GET | `/api/doacoes` | Listar todas as doações **(sem filtro por usuário)** |
+
+## ✅ Validações Importantes:
+
+- **Senhas:** Mínimo de 8 caracteres, com pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial.
+- **Email:** Obrigatório e único no sistema.
+- **Campos obrigatórios no cadastro:** Email, nome, senha, telefone, endereço, tipo de usuário, id_tipo_sanguineo, alergias, doar e receber.
+
+## ✅ Exemplo de Fluxo de Teste (Usando Postman):
+
+1. **Registrar um usuário:**  
+POST `/api/register`
+
+2. **Login:**  
+POST `/api/login`
+
+3. **Copiar o token de resposta**
+
+4. **Nas próximas requisições:**  
+Adicionar no Header:  
+
+```
+Authorization: Bearer SEU_TOKEN_AQUI
+```
+
+5. **Testar os endpoints permitidos de acordo com o perfil**
+
+## ✅ Conclusão:
+
+O projeto foi desenvolvido seguindo boas práticas de segurança, organização de código e autenticação. Cada endpoint possui controle de acesso conforme o perfil do usuário, atendendo aos requisitos do projeto acadêmico.
